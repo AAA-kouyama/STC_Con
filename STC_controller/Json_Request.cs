@@ -26,7 +26,7 @@ namespace STC_controller
             dic.Add("Stc_ID", 10);
             dic.Add("Request_Time", 30);
             dic.Add("Ope_Code", 10);
-            dic.Add("Broker_Name", 20);
+            dic.Add("Broker_Name", 40);
             dic.Add("EA_Name", 60);
             dic.Add("MT4_Server", 40);
             dic.Add("MT4_ID", 20);
