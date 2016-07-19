@@ -38,6 +38,7 @@ namespace STC_controller
             Retry_Timer = new retry_timer();
             Retry_Timer.NewTimer();
             Retry_Timer.StartTimer();
+            tgl_socket_CheckedChanged(null,null);
 
         }
 
@@ -464,6 +465,11 @@ namespace STC_controller
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             close_sock();
+        }
+
+        private void btn_reame_Click(object sender, EventArgs e)
+        {
+            File_CTRL.file_rename(txt_renameFile.Text, "request.json", "@terminal.exe");
         }
     }
 

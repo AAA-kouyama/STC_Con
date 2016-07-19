@@ -77,6 +77,9 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tgl_socket = new System.Windows.Forms.CheckBox();
+            this.btn_reame = new System.Windows.Forms.Button();
+            this.txt_renameFile = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -420,7 +423,8 @@
             // 
             // tmr_rquest
             // 
-            this.tmr_rquest.Interval = 1000;
+            this.tmr_rquest.Enabled = true;
+            this.tmr_rquest.Interval = 5000;
             this.tmr_rquest.Tick += new System.EventHandler(this.tmr_rquest_Tick);
             // 
             // tgl_add_user
@@ -439,11 +443,13 @@
             // 
             this.tgl_reuest.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_reuest.AutoSize = true;
+            this.tgl_reuest.Checked = true;
+            this.tgl_reuest.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tgl_reuest.Location = new System.Drawing.Point(210, 154);
             this.tgl_reuest.Name = "tgl_reuest";
-            this.tgl_reuest.Size = new System.Drawing.Size(118, 22);
+            this.tgl_reuest.Size = new System.Drawing.Size(113, 22);
             this.tgl_reuest.TabIndex = 33;
-            this.tgl_reuest.Text = "requestタイマー false";
+            this.tgl_reuest.Text = "requestタイマー true";
             this.tgl_reuest.UseVisualStyleBackColor = true;
             this.tgl_reuest.CheckedChanged += new System.EventHandler(this.tgl_reuest_CheckedChanged);
             // 
@@ -522,19 +528,51 @@
             // 
             this.tgl_socket.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_socket.AutoSize = true;
+            this.tgl_socket.Checked = true;
+            this.tgl_socket.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tgl_socket.Location = new System.Drawing.Point(371, 154);
             this.tgl_socket.Name = "tgl_socket";
-            this.tgl_socket.Size = new System.Drawing.Size(68, 22);
+            this.tgl_socket.Size = new System.Drawing.Size(63, 22);
             this.tgl_socket.TabIndex = 42;
-            this.tgl_socket.Text = "sock false";
+            this.tgl_socket.Text = "sock true";
             this.tgl_socket.UseVisualStyleBackColor = true;
             this.tgl_socket.CheckedChanged += new System.EventHandler(this.tgl_socket_CheckedChanged);
+            // 
+            // btn_reame
+            // 
+            this.btn_reame.Location = new System.Drawing.Point(365, 547);
+            this.btn_reame.Name = "btn_reame";
+            this.btn_reame.Size = new System.Drawing.Size(75, 23);
+            this.btn_reame.TabIndex = 43;
+            this.btn_reame.Text = "rename";
+            this.btn_reame.UseVisualStyleBackColor = true;
+            this.btn_reame.Click += new System.EventHandler(this.btn_reame_Click);
+            // 
+            // txt_renameFile
+            // 
+            this.txt_renameFile.Location = new System.Drawing.Point(12, 549);
+            this.txt_renameFile.Name = "txt_renameFile";
+            this.txt_renameFile.Size = new System.Drawing.Size(343, 19);
+            this.txt_renameFile.TabIndex = 44;
+            this.txt_renameFile.Text = "C:\\Users\\f464\\Desktop\\request.json";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(12, 534);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(102, 12);
+            this.label16.TabIndex = 45;
+            this.label16.Text = "ファイルリネームテスト";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 536);
+            this.ClientSize = new System.Drawing.Size(488, 574);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.txt_renameFile);
+            this.Controls.Add(this.btn_reame);
             this.Controls.Add(this.tgl_socket);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
@@ -637,6 +675,9 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.CheckBox tgl_socket;
+        private System.Windows.Forms.Button btn_reame;
+        private System.Windows.Forms.TextBox txt_renameFile;
+        private System.Windows.Forms.Label label16;
     }
 }
 

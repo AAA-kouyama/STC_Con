@@ -15,6 +15,12 @@ namespace STC_controller
         private static string read_file = "test.txt";
         private static string write_file = "aaa.txt";
         
+        /// <summary>
+        /// ユーザーのMT4用インストールフォルダを作成します
+        /// </summary>
+        /// <param name="user">受信しているadd_userリクエスト</param>
+        /// <param name="stc_ID">STCユーザーID</param>
+        /// <returns></returns>
         public static bool CreateUserFolder(dynamic user, out string stc_ID)
         {
             try
@@ -38,6 +44,11 @@ namespace STC_controller
             
         }
 
+        /// <summary>
+        /// 指定ファイルの読み込み
+        /// </summary>
+        /// <param name="filePath">指定ファイルのフルパス</param>
+        /// <returns></returns>
         public static string file_Read(string filePath)
         {
             string text = "";
@@ -61,6 +72,11 @@ namespace STC_controller
 
         }
 
+        /// <summary>
+        /// ファイル出力（上書き）
+        /// </summary>
+        /// <param name="text">出力文字列</param>
+        /// <param name="out_put_full_path">出力先ファイルのフルパス</param>
         public static void file_OverWrite(string text, string out_put_full_path)
         {
             try
@@ -102,6 +118,11 @@ namespace STC_controller
             }
         }
 
+        /// <summary>
+        /// 正常操作時の証跡ログ出力ユーティリティ
+        /// </summary>
+        /// <param name="write_obj">出力文字列</param>
+        /// <param name="file_full_path">出力先ファイルパス</param>
         public static void Write_OK_Log(string write_obj, string file_full_path)
         {
             //ファイル出力
@@ -117,6 +138,33 @@ namespace STC_controller
             catch (System.Exception ex)
             {
                 logger.Error(" 正常処理結果証跡ファイル生成失敗: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// ファイルのリネームを行う
+        /// 退会若しくは期限切れ時にアンインストールだと手動対応を行わなけれならないので
+        /// 代わりにリネームして該当ファイルを使えなくする
+        /// 対象ファイルを操作する前に必ず使用されていない状態にする必要があります
+        /// </summary>
+        /// <param name="file_full_path">リネーム対象のファイルフルパス</param>
+        /// <param name="orign_name">リネームする対象のオリジナルファイル名</param>
+        /// <param name="rename">リネーム後のファイル名</param>
+        /// <returns></returns>
+        public static bool file_rename(string file_full_path, string orign_name, string rename)
+        {
+            try
+            {
+                string rename_file = file_full_path.Replace(orign_name, rename);
+                System.IO.FileInfo fi = new System.IO.FileInfo(file_full_path);
+                
+                fi.MoveTo(rename_file);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(" ファイルリネーム失敗: " + ex.Message);
+                return false;
             }
         }
 
