@@ -82,6 +82,11 @@ namespace STC_controller
                         req_errors = req_errors + req_error;
                         break;
 
+                    case "outage": // 退会処理(未テストなのでKaz様と打ち合わせてテストしましょう)
+                        uninst_mode(read_req, out status, out req_error);
+                        req_errors = req_errors + req_error;
+                        break;
+
                     case "mod_ea": // EAの設定変更
 
                         break;
@@ -237,6 +242,42 @@ namespace STC_controller
             error = "";
             status = true;
             return read_req;
+        }
+
+
+        private static dynamic uninst_mode(dynamic read_req, out bool status, out string error)
+        {
+            // パラメータチェック結果判定
+            if (read_req.Check_Status == "NG")
+            {
+                error = "事前チェックエラー";
+                status = false;
+                return read_req;
+            }
+
+            string file_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name + @"\terminal.exe";
+            
+            status = program_CTRL.SearchProgram(file_path, out error);
+            if (status)
+            {
+                // 起動している場合は、事前停止動作をさせます
+                program_CTRL.StopProgram(file_path);
+            }
+            
+            status = File_CTRL.file_rename(file_path, "terminal.exe", "@terminal.exe");
+            if (status)
+            {
+                error = "";
+                read_req.EA_Status = "OFF";
+            }
+            else
+            {
+                error = "リネーム失敗";
+                read_req.EA_Status = "UNKNOWN";
+            }
+            
+            return read_req;
+
         }
 
         /// <summary>
