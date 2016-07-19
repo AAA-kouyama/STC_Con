@@ -443,8 +443,6 @@
             // 
             this.tgl_reuest.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_reuest.AutoSize = true;
-            this.tgl_reuest.Checked = true;
-            this.tgl_reuest.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tgl_reuest.Location = new System.Drawing.Point(210, 154);
             this.tgl_reuest.Name = "tgl_reuest";
             this.tgl_reuest.Size = new System.Drawing.Size(113, 22);
@@ -528,8 +526,6 @@
             // 
             this.tgl_socket.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_socket.AutoSize = true;
-            this.tgl_socket.Checked = true;
-            this.tgl_socket.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tgl_socket.Location = new System.Drawing.Point(371, 154);
             this.tgl_socket.Name = "tgl_socket";
             this.tgl_socket.Size = new System.Drawing.Size(63, 22);

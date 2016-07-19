@@ -38,7 +38,7 @@ namespace STC_controller
             Retry_Timer = new retry_timer();
             Retry_Timer.NewTimer();
             Retry_Timer.StartTimer();
-            tgl_socket_CheckedChanged(null,null);
+            
 
         }
 
