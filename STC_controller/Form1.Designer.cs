@@ -445,9 +445,9 @@
             this.tgl_reuest.AutoSize = true;
             this.tgl_reuest.Location = new System.Drawing.Point(210, 154);
             this.tgl_reuest.Name = "tgl_reuest";
-            this.tgl_reuest.Size = new System.Drawing.Size(113, 22);
+            this.tgl_reuest.Size = new System.Drawing.Size(118, 22);
             this.tgl_reuest.TabIndex = 33;
-            this.tgl_reuest.Text = "requestタイマー true";
+            this.tgl_reuest.Text = "requestタイマー false";
             this.tgl_reuest.UseVisualStyleBackColor = true;
             this.tgl_reuest.CheckedChanged += new System.EventHandler(this.tgl_reuest_CheckedChanged);
             // 
@@ -528,9 +528,9 @@
             this.tgl_socket.AutoSize = true;
             this.tgl_socket.Location = new System.Drawing.Point(371, 154);
             this.tgl_socket.Name = "tgl_socket";
-            this.tgl_socket.Size = new System.Drawing.Size(63, 22);
+            this.tgl_socket.Size = new System.Drawing.Size(68, 22);
             this.tgl_socket.TabIndex = 42;
-            this.tgl_socket.Text = "sock true";
+            this.tgl_socket.Text = "sock false";
             this.tgl_socket.UseVisualStyleBackColor = true;
             this.tgl_socket.CheckedChanged += new System.EventHandler(this.tgl_socket_CheckedChanged);
             // 
