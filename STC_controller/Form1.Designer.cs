@@ -80,6 +80,7 @@
             this.btn_reame = new System.Windows.Forms.Button();
             this.txt_renameFile = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.btn_get_folders = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -561,11 +562,22 @@
             this.label16.TabIndex = 45;
             this.label16.Text = "ファイルリネームテスト";
             // 
+            // btn_get_folders
+            // 
+            this.btn_get_folders.Location = new System.Drawing.Point(12, 574);
+            this.btn_get_folders.Name = "btn_get_folders";
+            this.btn_get_folders.Size = new System.Drawing.Size(75, 23);
+            this.btn_get_folders.TabIndex = 46;
+            this.btn_get_folders.Text = "folders";
+            this.btn_get_folders.UseVisualStyleBackColor = true;
+            this.btn_get_folders.Click += new System.EventHandler(this.btn_get_folders_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 574);
+            this.ClientSize = new System.Drawing.Size(488, 601);
+            this.Controls.Add(this.btn_get_folders);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.txt_renameFile);
             this.Controls.Add(this.btn_reame);
@@ -674,6 +686,7 @@
         private System.Windows.Forms.Button btn_reame;
         private System.Windows.Forms.TextBox txt_renameFile;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button btn_get_folders;
     }
 }
 

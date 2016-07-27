@@ -243,6 +243,9 @@ namespace STC_controller
                     {
                         File_CTRL.file_OverWrite(json_obj.ToString(), txt_out_put.Text + "\\" + out_put_file_name);
                         MessageBox.Show("結果ファイル出力完了！");
+
+                        // 登録結果としてインストールフォルダのログを出力して保管
+                        File_CTRL.get_folders();
                     }
                 }
                 else
@@ -470,6 +473,11 @@ namespace STC_controller
         private void btn_reame_Click(object sender, EventArgs e)
         {
             File_CTRL.file_rename(txt_renameFile.Text, "request.json", "@terminal.exe");
+        }
+
+        private void btn_get_folders_Click(object sender, EventArgs e)
+        {
+            File_CTRL.get_folders();
         }
     }
 

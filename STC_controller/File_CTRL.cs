@@ -12,8 +12,6 @@ namespace STC_controller
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static string enc = "UTF-8";
-        private static string read_file = "test.txt";
-        private static string write_file = "aaa.txt";
         
         /// <summary>
         /// ユーザーのMT4用インストールフォルダを作成します
@@ -99,14 +97,23 @@ namespace STC_controller
             }
         }
 
-        public static void file_AddWrite(string text)
+        /// <summary>
+        /// ファイル出力（追記）
+        /// </summary>
+        /// <param name="text">出力文字列</param>
+        /// <param name="out_put_full_path">出力先ファイルのフルパス</param>
+        public static void file_AddWrite(string text, string out_put_full_path)
         {
 
-            //おもちゃ実装なのでつかわないでね～
             try
             {
+                if (!System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(out_put_full_path)))
+                {
+                    System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(out_put_full_path));
+                }
+
                 var utf8_encoding = new System.Text.UTF8Encoding(false);
-                var writer = new StreamWriter(write_file, true, utf8_encoding);
+                var writer = new StreamWriter(out_put_full_path, true, utf8_encoding);
                 writer.WriteLine(text);
                 writer.Close();
 
@@ -166,6 +173,32 @@ namespace STC_controller
                 logger.Error(" ファイルリネーム失敗: " + ex.Message);
                 return false;
             }
+        }
+
+
+        public static void get_folders()
+        {
+            try
+            {
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(@"C:\Users\GFIT"); //C:\Users\GFIT
+                IEnumerable<System.IO.DirectoryInfo> subFolders = di.EnumerateDirectories("*", System.IO.SearchOption.AllDirectories);
+
+                string folder_log_path = @"C:\STC_controller_log\Folder_log\" + System.DateTime.Now.ToString("yyyyMMdd") + "folder_backup.txt";
+                //
+                file_AddWrite("インストール済みフォルダの階層情報バックアップです", folder_log_path);
+
+                //サブフォルダを列挙する
+                foreach (System.IO.DirectoryInfo subFolder in subFolders)
+                {
+                    Console.WriteLine(subFolder.FullName);
+                    file_AddWrite(subFolder.FullName, folder_log_path);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(" フォルダ取得失敗: " + ex.Message);
+            }
+
         }
 
     }
