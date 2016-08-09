@@ -81,6 +81,11 @@
             this.txt_renameFile = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.btn_get_folders = new System.Windows.Forms.Button();
+            this.btn_create_folders = new System.Windows.Forms.Button();
+            this.txt_create_folders = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -424,7 +429,6 @@
             // 
             // tmr_rquest
             // 
-            this.tmr_rquest.Enabled = true;
             this.tmr_rquest.Interval = 5000;
             this.tmr_rquest.Tick += new System.EventHandler(this.tmr_rquest_Tick);
             // 
@@ -564,19 +568,70 @@
             // 
             // btn_get_folders
             // 
-            this.btn_get_folders.Location = new System.Drawing.Point(12, 574);
+            this.btn_get_folders.Location = new System.Drawing.Point(132, 602);
             this.btn_get_folders.Name = "btn_get_folders";
             this.btn_get_folders.Size = new System.Drawing.Size(75, 23);
             this.btn_get_folders.TabIndex = 46;
-            this.btn_get_folders.Text = "folders";
+            this.btn_get_folders.Text = "get_folders";
             this.btn_get_folders.UseVisualStyleBackColor = true;
             this.btn_get_folders.Click += new System.EventHandler(this.btn_get_folders_Click);
+            // 
+            // btn_create_folders
+            // 
+            this.btn_create_folders.Location = new System.Drawing.Point(361, 641);
+            this.btn_create_folders.Name = "btn_create_folders";
+            this.btn_create_folders.Size = new System.Drawing.Size(88, 23);
+            this.btn_create_folders.TabIndex = 47;
+            this.btn_create_folders.Text = "create_folders";
+            this.btn_create_folders.UseVisualStyleBackColor = true;
+            this.btn_create_folders.Click += new System.EventHandler(this.btn_create_folders_Click);
+            // 
+            // txt_create_folders
+            // 
+            this.txt_create_folders.Location = new System.Drawing.Point(12, 645);
+            this.txt_create_folders.Name = "txt_create_folders";
+            this.txt_create_folders.Size = new System.Drawing.Size(343, 19);
+            this.txt_create_folders.TabIndex = 48;
+            this.txt_create_folders.Text = "C:\\STC_controller_log\\Folder_log\\";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(12, 628);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(129, 12);
+            this.label17.TabIndex = 49;
+            this.label17.Text = "フォルダ復旧用ファイルパス";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(12, 607);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(114, 12);
+            this.label18.TabIndex = 50;
+            this.label18.Text = "フォルダ手動バックアップ";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.Color.Red;
+            this.label19.Location = new System.Drawing.Point(145, 582);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(195, 12);
+            this.label19.TabIndex = 51;
+            this.label19.Text = "＊＊＊＊以下は復旧関連用＊＊＊＊";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 601);
+            this.ClientSize = new System.Drawing.Size(488, 674);
+            this.Controls.Add(this.label19);
+            this.Controls.Add(this.label18);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.txt_create_folders);
+            this.Controls.Add(this.btn_create_folders);
             this.Controls.Add(this.btn_get_folders);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.txt_renameFile);
@@ -687,6 +742,11 @@
         private System.Windows.Forms.TextBox txt_renameFile;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button btn_get_folders;
+        private System.Windows.Forms.Button btn_create_folders;
+        private System.Windows.Forms.TextBox txt_create_folders;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
     }
 }
 

@@ -176,22 +176,35 @@ namespace STC_controller
         }
 
 
+        private static string folder_log_header ="インストール済みフォルダの階層情報バックアップです";
+
+        /// <summary>
+        /// 顧客環境のインストールフォルダをログっとく為の機能です
+        /// </summary>
         public static void get_folders()
         {
             try
             {
-                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(@"C:\Users\GFIT"); //C:\Users\GFIT
-                IEnumerable<System.IO.DirectoryInfo> subFolders = di.EnumerateDirectories("*", System.IO.SearchOption.AllDirectories);
+                //string[] subFolders = System.IO.Directory.GetDirectories(@"C:\Users\GFIT", "*", System.IO.SearchOption.AllDirectories);
+                IEnumerable<string> subFolders = System.IO.Directory.EnumerateDirectories(@"C:\Users\GFIT", "*", System.IO.SearchOption.AllDirectories);
 
                 string folder_log_path = @"C:\STC_controller_log\Folder_log\" + System.DateTime.Now.ToString("yyyyMMdd") + "folder_backup.txt";
                 //
-                file_AddWrite("インストール済みフォルダの階層情報バックアップです", folder_log_path);
+                file_AddWrite(folder_log_header, folder_log_path);
 
                 //サブフォルダを列挙する
-                foreach (System.IO.DirectoryInfo subFolder in subFolders)
+                foreach (string subFolder in subFolders)
                 {
-                    Console.WriteLine(subFolder.FullName);
-                    file_AddWrite(subFolder.FullName, folder_log_path);
+                    if (subFolder.StartsWith(@"C:\Users\GFIT\u"))
+                    {
+                        IEnumerable<string> Target_subFolders = System.IO.Directory.EnumerateDirectories(subFolder, "*", System.IO.SearchOption.AllDirectories);
+                        //ターゲット以下のサブフォルダを列挙する
+                        foreach (string Target_subFolder in Target_subFolders)
+                        {
+                            Console.WriteLine(Target_subFolder);
+                            file_AddWrite(Target_subFolder, folder_log_path);
+                        }
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -199,6 +212,41 @@ namespace STC_controller
                 logger.Error(" フォルダ取得失敗: " + ex.Message);
             }
 
+        }
+
+        public static void create_folder(string folder)
+        {
+
+            try
+            {
+                if (!System.IO.Directory.Exists(folder))
+                {
+                    System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(folder);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(" フォルダ作成失敗: " + ex.Message);
+            }
+
+        }
+
+        public static void recover_folder(string back_up_log_file_path)
+        {
+            string file_paths = file_Read(back_up_log_file_path);
+            file_paths = file_paths.Replace(Environment.NewLine, "\r");
+            file_paths = file_paths.Trim('\r');
+
+            string[] file_path = file_paths.Split('\r');
+
+            foreach (string item in file_path)
+            {
+                if (item != folder_log_header)
+                {
+                    create_folder(item);
+                }
+
+            }
         }
 
     }

@@ -22,11 +22,11 @@ namespace STC_controller
         private static string real_server_url = "https://systrade-cloud.com/";
 
         // get先URL
-        private static string add_user_url = real_server_url + "server/add_user.php";
-        private static string request = real_server_url + "server/request.php";
+        private static string add_user_url = real_server_url + "server/admin/add_user.php";
+        private static string request = real_server_url + "server/admin/request.php";
         // post先URL
-        private static string upload = real_server_url + "server/upload.php";
-        private static string resultbox = real_server_url + "server/resultbox.php";
+        private static string upload = real_server_url + "server/admin/upload.php";
+        private static string resultbox = real_server_url + "server/admin/resultbox.php";
 
         private retry_timer Retry_Timer;
 
@@ -478,6 +478,15 @@ namespace STC_controller
         private void btn_get_folders_Click(object sender, EventArgs e)
         {
             File_CTRL.get_folders();
+            MessageBox.Show("フォルダバックアップ完了！ C:\\STC_controller_log\\Folder_logを確認してください。", "フォルダバックアップ完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btn_create_folders_Click(object sender, EventArgs e)
+        {
+            File_CTRL.recover_folder(txt_create_folders.Text);
+            MessageBox.Show("フォルダ復旧完了！ C:\\Users\\GFITを確認してください。", "フォルダ復旧完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //
         }
     }
 

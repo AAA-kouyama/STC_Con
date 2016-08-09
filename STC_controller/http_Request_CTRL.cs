@@ -19,6 +19,9 @@ namespace STC_controller
 
         //private static Task<HttpResponseMessage> httpClient;
 
+        private static string username = "admin01";
+        private static string password = "admin01";
+
         public static string http_get(string url, out bool status)
         {
             try
@@ -27,6 +30,9 @@ namespace STC_controller
                 System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
                 //または、
                 //System.Net.WebRequest webreq = System.Net.WebRequest.Create(url);
+
+                //認証の設定
+                webreq.Credentials = new System.Net.NetworkCredential(username, password);
 
                 //サーバーからの応答を受信するためのHttpWebResponseを取得
                 System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();
@@ -85,6 +91,11 @@ namespace STC_controller
                 //WebRequestの作成
                 System.Net.HttpWebRequest req = (System.Net.HttpWebRequest)
                     System.Net.WebRequest.Create(url);
+
+                //認証の設定
+                req.Credentials = new System.Net.NetworkCredential(username, password);
+
+
                 //メソッドにPOSTを指定
                 req.Method = "POST";
                 //ContentTypeを設定
