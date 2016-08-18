@@ -26,7 +26,7 @@ namespace STC_controller
         private static string request = real_server_url + "server/admin/request.php";
         // post先URL
         private static string upload = real_server_url + "server/admin/upload.php";
-        private static string resultbox = real_server_url + "server/admin/resultbox.php";
+        private static string resultbox = real_server_url + "server/admin/resultbox.php"; 
 
         private retry_timer Retry_Timer;
 
@@ -487,6 +487,12 @@ namespace STC_controller
             MessageBox.Show("フォルダ復旧完了！ C:\\Users\\GFITを確認してください。", "フォルダ復旧完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             //
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string direcotryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            Console.WriteLine(direcotryPath);
         }
     }
 

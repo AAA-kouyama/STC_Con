@@ -19,8 +19,8 @@ namespace STC_controller
 
         //private static Task<HttpResponseMessage> httpClient;
 
-        private static string username = "admin01";
-        private static string password = "admin01";
+        private static string username = "gfitadmin";
+        private static string password = "Lvf24q6ngn4o";
 
         public static string http_get(string url, out bool status)
         {
