@@ -255,8 +255,10 @@ namespace STC_controller
                 return read_req;
             }
 
-            string file_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name + @"\terminal.exe";
-            
+            // 起動プログラムのパス
+            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string file_path = folder_path + @"\terminal.exe";
+
             status = program_CTRL.SearchProgram(file_path, out error);
             if (status)
             {
@@ -269,6 +271,11 @@ namespace STC_controller
             {
                 error = "";
                 read_req.EA_Status = "OFF";
+
+                // 指示をファイルに出力する機能の追加予定地
+                string last_order = "outage";
+                // 最終指示記録ファイルへの書き込み(bool値応答してくれるが一旦は実行のみ)
+                File_CTRL.last_order_rewrite(folder_path, last_order);
             }
             else
             {
@@ -326,11 +333,12 @@ namespace STC_controller
         /// <returns></returns>
         private static bool program_start(dynamic read_req,out string error)
         {
-            string program_path = @"C:\Users\GFIT\";
+            
             bool status = false;
 
             // 起動プログラムのパス
-            program_path = program_path + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name + @"\terminal.exe";
+            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string program_path = folder_path + @"\terminal.exe";
             status = program_CTRL.StartProgram(program_path);
 
             if (!status)
@@ -348,6 +356,11 @@ namespace STC_controller
                 return false;
             }
 
+            // 指示をファイルに出力する機能の追加予定地
+            string last_order = "start";
+            // 最終指示記録ファイルへの書き込み(bool値応答してくれるが一旦は実行のみ)
+            File_CTRL.last_order_rewrite(folder_path, last_order);
+
             return true;
 
         }
@@ -364,8 +377,8 @@ namespace STC_controller
 
             //ファイル名:C:\Users\GFIT\u00000212\OANDA-Japan Practice - デモ口座\6835252\USDJPY\H1\terminal.exe
             // 起動プログラムのパス
-            string file_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period  + @"\" + read_req.EA_Name + @"\terminal.exe";
-
+            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string file_path = folder_path + @"\terminal.exe";
 
             status = program_CTRL.SearchProgram(file_path, out error);
             if (!status)
@@ -373,6 +386,11 @@ namespace STC_controller
                 return true;
             }
             program_CTRL.StopProgram(file_path);
+
+            // 指示をファイルに出力する機能の追加予定地
+            string last_order = "stop";
+            // 最終指示記録ファイルへの書き込み(bool値応答してくれるが一旦は実行のみ)
+            File_CTRL.last_order_rewrite(folder_path, last_order);
 
             return true;
 
@@ -401,5 +419,95 @@ namespace STC_controller
 
             return true;
         }
+
+        public static void connect_watch()
+        {
+            try
+            {
+
+                string watch_log_file = @"\gfit.txt";
+
+                // 最終指示状況をDictionary型で取得します。
+                Dictionary<string, string> dict = File_CTRL.csv_reader();
+
+                foreach (var pair in dict)
+                {
+                    //Console.WriteLine("Dic設定上の" + pair.Key + "は" + pair.Value);
+
+                    if (System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(pair.Key + watch_log_file)))
+                    {
+                        switch (pair.Value)
+                        {
+                            case "start": // MT4起動&自動売買開始
+                                          // 更新日時を取得する
+                                DateTime dtUpdate = System.IO.File.GetLastWriteTime(pair.Key + watch_log_file);
+                                TimeSpan ts = DateTime.Now - dtUpdate;   //DateTime の差が TimeSpan として返る
+                                Console.WriteLine("最終更新日時からの秒差: " + ts.TotalSeconds + "秒の差があります。");
+
+                                // 現在日時と更新日時が一定時間乖離した場合は以降の処理を実装(取り敢えず１０分＝600秒ぐらいかな)
+                                if ((int)ts.TotalSeconds > 600)
+                                {
+                                    // 通知後に該当のMT4を強制停止
+                                    Console.WriteLine("強制停止");
+                                    string err = "";
+                                    if (program_CTRL.SearchProgram(pair.Key + @"\terminal.exe", out err))
+                                    {
+                                        program_CTRL.StopProgram(pair.Key + @"\terminal.exe");
+                                    }
+                                    else
+                                    {
+                                        logger.Error(" 接続監視失敗 停止対象のプログラムがOS上で見つかりませんでした パス:" + pair.Key + " 最終指示:" + pair.Value);
+                                    }
+                                    
+                                    // 強制停止後、最終指示一覧に強制停止である事を上書き
+                                    File_CTRL.last_order_rewrite(pair.Key, "force_stop");
+                                    // STCサーバーへ通知する機能の実装予定地
+                                }
+
+                                break;
+                            case "stop": // MT4停止&自動売買停止
+                                break;
+                            case "reload": // MT4再起動
+                                break;
+                            case "status": // STCログイン時のMT4起動状態応答用
+                                break;
+                            case "outage": // 退会処理
+                                break;
+                            case "mod_ea": // EAの設定変更
+                                break;
+                            case "mod_brok": // ブローカーの設定変更
+                                break;
+                            case "watch_s": // 起動状態の監視
+                                break;
+                            case "watch_r": // 再起動状態の監視
+                                break;
+                            case "force_stop": // 稼働検査でのタイムスタンプチェックで強制停止
+                                break;
+                            default:
+                                // 指示ファイル上の指示がおかしい場合
+                                logger.Error(" 接続監視失敗 最終指示ファイル上のパラメータエラー: パス:" + pair.Key + " 最終指示:" + pair.Value);
+                                break;
+                        }
+
+                    }
+                    else
+                    {
+                        // 指定されたファイルが見つからない場合
+                        logger.Error(" 接続監視失敗 最終指示ファイル上の指定フォルダのgfit.txtが見つかりません: パス:" + pair.Key + " 最終指示:" + pair.Value);
+                    }
+
+                }
+
+
+            }
+            catch (System.Exception ex)
+            {
+                // ファイルを開くのに失敗したとき
+                logger.Error(" 接続監視失敗失敗: " + ex.Message);
+            }
+
+        }
+
+
     }
 }

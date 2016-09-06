@@ -37,6 +37,7 @@ namespace STC_controller
                     req_obj.Stc_ID = Json_Util.get_Value(read_req, "Stc_ID");
                     req_obj.Request_Time = Json_Util.get_Value(read_req, "Request_Time");
                     req_obj.Response_time = Json_Util.iso_8601_now();
+                    //req_obj.EA_ID = Json_Util.get_Value(read_req, "EA_ID"); // 追加予定
                     req_obj.Broker_Name = Json_Util.get_Value(read_req, "Broker_Name");
                     req_obj.MT4_Server = Json_Util.get_Value(read_req, "MT4_Server");
                     req_obj.MT4_ID = Json_Util.get_Value(read_req, "MT4_ID");

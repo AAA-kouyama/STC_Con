@@ -22,11 +22,11 @@ namespace STC_controller
         private static string real_server_url = "https://systrade-cloud.com/";
 
         // get先URL
-        private static string add_user_url = real_server_url + "server/admin/add_user.php";
-        private static string request = real_server_url + "server/admin/request.php";
+        private static string add_user_url = real_server_url + "SV/admin/add_user.php";
+        private static string request = real_server_url + "SV/admin/request.php";
         // post先URL
-        private static string upload = real_server_url + "server/admin/upload.php";
-        private static string resultbox = real_server_url + "server/admin/resultbox.php"; 
+        private static string upload = real_server_url + "SV/admin/upload.php";
+        private static string resultbox = real_server_url + "SV/admin/resultbox.php"; 
 
         private retry_timer Retry_Timer;
 
@@ -62,7 +62,7 @@ namespace STC_controller
             string error = "";
             string out_put_file_name = "";
 
-            if(readed_file.Length > 0)
+            if (readed_file.Length > 0)
             {
                 if (rdo_add_user.Checked)
                 {
@@ -493,6 +493,40 @@ namespace STC_controller
         {
             string direcotryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             Console.WriteLine(direcotryPath);
+        }
+
+        private void btn_csv_read_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Dictionary<string, string> dict = File_CTRL.csv_reader();
+                
+                dict[@"C:\Users\GFIT\u00001105\┗Ava-Demo\5997487\USDJPY\H1\ReloadTemplateEA.mq4"] = "AAA";
+
+                System.Console.WriteLine(File_CTRL.csv_writer(dict));
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        private void btn_Conn_Watch_Click(object sender, EventArgs e)
+        {
+            MT4_CTLR.connect_watch();
+        }
+
+        private void tmr_conn_watch_Tick(object sender, EventArgs e)
+        {
+            MT4_CTLR.connect_watch();
+        }
+
+        private void tgl_MT4_watch_CheckedChanged(object sender, EventArgs e)
+        {
+            tmr_conn_watch.Enabled = tgl_MT4_watch.Checked;
+            
+            tgl_MT4_watch.Text = "watch " + tgl_MT4_watch.Checked.ToString();
         }
     }
 

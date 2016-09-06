@@ -74,6 +74,9 @@ namespace STC_controller
             error = "";
             bool status = false;
 
+            // インストール設定ファイル
+            string ins_file_name = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
             // フォルダ生成
             foreach (dynamic read_user in (object[])json_obj)
             {
@@ -83,11 +86,21 @@ namespace STC_controller
                     のパスをMT4のインストールパスにしようと考えております。
                 */
                 string stc_id = "";
-                status = File_CTRL.CreateUserFolder(read_user, out stc_id);
+                // インストールパス応答初期化
+                string ins_path = "";
+                status = File_CTRL.CreateUserFolder(read_user, out stc_id, out ins_path);
                 if (!status)
                 {
                     error = error + " Stc_ID:" + stc_id + "\n\r";
                     read_user.Check_Status = "NG";
+                }
+                else
+                {
+                    // デスクトップにインストールパス格納ファイル生成
+                    File_CTRL.file_OverWrite(ins_path, ins_file_name + "\\" + stc_id + "_setting.txt");
+
+                    // 全ユーザーのインストールパス格納ファイルを出力する(稼働監視用)
+                    File_CTRL.file_AddWrite(ins_path + ",stop", File_CTRL.get_CodeBase_path() + "\\all_setting.txt");
                 }
             }
 

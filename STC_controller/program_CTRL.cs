@@ -71,6 +71,12 @@ namespace STC_controller
             }
         }
 
+        /// <summary>
+        /// 対象のプログラムを検索します
+        /// </summary>
+        /// <param name="ExecutablePath">プログラム(EXE)のフルパス</param>
+        /// <param name="error">エラー内容</param>
+        /// <returns></returns>
         public static bool SearchProgram(string ExecutablePath, out string error)
         {
             try

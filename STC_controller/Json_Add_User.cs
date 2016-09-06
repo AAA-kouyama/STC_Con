@@ -30,6 +30,7 @@ namespace STC_controller
             dic.Add("MT4_Server", 40);
             dic.Add("MT4_ID", 20);
             dic.Add("MT4_Pwd", 20);
+            //dic.Add("EA_ID", 4); //追加予定
             dic.Add("EA_Name", 60);
             dic.Add("Ccy", 10);
             dic.Add("Time_Period", 10);
