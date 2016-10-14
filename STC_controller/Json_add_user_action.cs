@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace STC_controller
 {
     class Json_add_user_action
@@ -47,6 +46,7 @@ namespace STC_controller
                 {
                     //エラーログファイル出力
                     logger.Error(" インストールフォルダ準備エラー　対象Stc_ID:" + error + "\n\r" + add_user_strings);
+                    MessageBox.Show(" インストールフォルダ準備エラー　対象Stc_ID:" + error + "\n\r STC_CONのログファイルを確認してください。\n\r一応、応答ファイルは出力しておきますが使わないでください。");
                 }
 
                 // 応答用end_init.json生成

@@ -18,15 +18,17 @@ namespace STC_controller
     public partial class MainForm : Form
     {
 
-        private static string test_server_url = "https://stc-yakazo.c9users.io/";
+        private static string test_server_url = "https://218.222.227.232//";
         private static string real_server_url = "https://systrade-cloud.com/";
 
-        // get先URL
-        private static string add_user_url = real_server_url + "SV/admin/add_user.php";
-        private static string request = real_server_url + "SV/admin/request.php";
-        // post先URL
-        private static string upload = real_server_url + "SV/admin/upload.php";
-        private static string resultbox = real_server_url + "SV/admin/resultbox.php"; 
+        // get先URL(rdo_stg_CheckedChanged()にて設定)
+        private static string add_user_url = "";
+        private static string request = "";
+        private static string add_EA_url = "";
+
+        // post先URL(rdo_stg_CheckedChanged()にて設定)
+        private static string upload = "";
+        private static string resultbox = ""; 
 
         private retry_timer Retry_Timer;
 
@@ -38,6 +40,9 @@ namespace STC_controller
             Retry_Timer = new retry_timer();
             Retry_Timer.NewTimer();
             Retry_Timer.StartTimer();
+
+            // テストサーバーへの接続を設定
+            rdo_stg.Checked = true;
             
 
         }
@@ -201,26 +206,36 @@ namespace STC_controller
             string request_machine = "";
             string order_url = "";
             string add_user = "";
+            string add_EA = "";
 
             if (txt_get_url.Text == "")
             {
                 add_user = add_user_url;
                 request_machine = request;
+                add_EA = add_EA_url;
             }
             else
             {
                 add_user = txt_get_url.Text;
                 request_machine = txt_get_url.Text;
+                add_EA = txt_get_url.Text;
             }
 
             // ラジオボタンはadd_userだけだが取り敢えずrequest_machineも分岐してみる
             if (rdo_url_add_user.Checked)
             {
+                // ユーザー追加
                 order_url = add_user;
             }
-            else
+            else if(rdo_url_request.Checked)
             {
+                // 操作リクエスト
                 order_url = request_machine;
+            }
+            else if (rdo_url_add_EA.Checked)
+            {
+                // EA追加
+                order_url = add_EA;
             }
 
             dynamic json_obj = "";
@@ -234,10 +249,20 @@ namespace STC_controller
             {
                 string out_put_file_name = "";
 
-                if (rdo_url_add_user.Checked) {
+                if (rdo_url_add_user.Checked || rdo_url_add_EA.Checked) {
 
                     json_obj = Json_add_user_action.add_user_motion(result, out status, out error);
-                    out_put_file_name = "end_init.json";
+
+                    if (rdo_url_add_user.Checked)
+                    {
+                        // ユーザー追加
+                        out_put_file_name = "end_init.json";
+                    }
+                    else if (rdo_url_add_EA.Checked)
+                    {
+                        // EA追加
+                        out_put_file_name = "end_ea_add.json";
+                    }
 
                     if (json_obj != null)
                     {
@@ -527,6 +552,48 @@ namespace STC_controller
             tmr_conn_watch.Enabled = tgl_MT4_watch.Checked;
             
             tgl_MT4_watch.Text = "watch " + tgl_MT4_watch.Checked.ToString();
+        }
+
+        private void btn_recover_Click(object sender, EventArgs e)
+        {
+            if (!tgl_reuest.Checked)
+            {
+                MT4_CTLR.recover_MT4();
+                MessageBox.Show("動作が完了しました。\n\r" + @"C:\STC_controller_log\Error_Logs" + "のエラーログに\n\rエラーが出ていないか確認してください。");
+            }
+            else
+            {
+                MessageBox.Show("リクエスト受信中は動作できません！");
+            }
+        }
+
+        private void rdo_stg_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if(rdo_stg.Checked == true)
+            {
+                this.BackColor = System.Drawing.Color.DarkBlue;
+                // get先URL
+                add_user_url = test_server_url + "SV/admin/add_user.php";
+                request = test_server_url + "SV/admin/request.php";
+                add_EA_url = test_server_url + "SV/admin/add_ea.php";
+
+                // post先URL
+                upload = test_server_url + "SV/admin/upload.php";
+                resultbox = test_server_url + "SV/admin/resultbox.php";
+            }
+            else
+            {
+                this.BackColor = System.Drawing.Color.Green;
+                // get先URL
+                add_user_url = real_server_url + "SV/admin/add_user.php";
+                request = real_server_url + "SV/admin/request.php";
+                add_EA_url = real_server_url + "SV/admin/add_ea.php";
+
+                // post先URL
+                upload = real_server_url + "SV/admin/upload.php";
+                resultbox = real_server_url + "SV/admin/resultbox.php";
+            }
         }
     }
 

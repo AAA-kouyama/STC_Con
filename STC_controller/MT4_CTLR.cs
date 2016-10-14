@@ -420,6 +420,13 @@ namespace STC_controller
             return true;
         }
 
+        /// <summary>
+        /// 各MT4インストールフォルダで更新されているgfit.txtのタイムスタンプをチェックし
+        /// MT4のダミーEAが動作しているか判定を行います。
+        /// MT4が稼働指示されている状態でタイムスタンプが更新されていない場合は
+        /// MT4サーバーへ接続できていないと判断し強制終了を行います。
+        /// 将来的にはSTC_SVへ通知する機能を実装する構想です。
+        /// </summary>
         public static void connect_watch()
         {
             try
@@ -507,6 +514,85 @@ namespace STC_controller
             }
 
         }
+
+        /// <summary>
+        /// MT4の起動状況の再現をall_setting.txtを使って行います。
+        /// Windowsアップデートなどでサーバーがリブートした場合に
+        /// MT4も停止するので、その状況からサービスを再開させる事が目的です。
+        /// </summary>
+        public static void recover_MT4()
+        {
+            try
+            {
+
+                // 最終指示状況をDictionary型で取得します。
+                Dictionary<string, string> dict = File_CTRL.csv_reader();
+
+                foreach (var pair in dict)
+                {
+                    //Console.WriteLine("Dic設定上の" + pair.Key + "は" + pair.Value);
+
+                    switch (pair.Value)
+                    {
+                        case "start": // MT4起動&自動売買開始
+                            bool status = false;
+                            string program_path = pair.Key + @"\terminal.exe";
+                            string error = "";
+
+                            // 起動指示前に起動しているかの確認
+                            status = program_CTRL.SearchProgram(program_path, out error);
+
+                            if (!status)
+                            {
+                                // 起動動作を行います
+                                // program_CTRL.StartProgramはbool値返すのでfalseの時はログへ出力する
+                                status = program_CTRL.StartProgram(program_path);
+                                if (!status)
+                                {
+                                    logger.Error(" 起動状態再現失敗 起動する事が出来ませんでした: パス:" + pair.Key + " 最終指示:" + pair.Value);
+                                }
+
+                            }
+                            else
+                            {
+                                logger.Error(" 起動状態再現 既に起動状態でした: パス:" + pair.Key + " 最終指示:" + pair.Value);
+                            }
+
+                            break;
+                        case "stop": // MT4停止&自動売買停止
+                            break;
+                        case "reload": // MT4再起動
+                            break;
+                        case "status": // STCログイン時のMT4起動状態応答用
+                            break;
+                        case "outage": // 退会処理
+                            break;
+                        case "mod_ea": // EAの設定変更
+                            break;
+                        case "mod_brok": // ブローカーの設定変更
+                            break;
+                        case "watch_s": // 起動状態の監視
+                            break;
+                        case "watch_r": // 再起動状態の監視
+                            break;
+                        case "force_stop": // 稼働検査でのタイムスタンプチェックで強制停止
+                            break;
+                        default:
+                            // 指示ファイル上の指示がおかしい場合
+                            logger.Error(" 起動状態再現失敗 全体最終指示ファイル上のパラメータエラー: パス:" + pair.Key + " 最終指示:" + pair.Value);
+                            break;
+                    }
+
+                }
+            }
+            catch (System.Exception ex)
+            {
+                // ファイルを開くのに失敗したとき
+                logger.Error(" 起動状態再現失敗: " + ex.Message);
+            }
+
+}
+
 
 
     }

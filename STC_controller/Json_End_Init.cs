@@ -38,16 +38,16 @@ namespace STC_controller
                     user_obj.Launch_Time = Json_Util.iso_8601_now();
                     user_obj.Machine_Name = "Jupiter";
                     user_obj.Broker_Name = Json_Util.get_Value(read_user, "Broker_Name");
-                    //user_obj.MT4_Server = Json_Util.get_Value(read_user, "MT4_Server");
-                    user_obj.MT4_Server = Json_Util.get_Value(read_user, "Broker_Name");
+                    user_obj.MT4_Server = Json_Util.get_Value(read_user, "MT4_Server");
                     user_obj.MT4_ID = Json_Util.get_Value(read_user, "MT4_ID");
                     user_obj.MT4_Pwd = Json_Util.get_Value(read_user, "MT4_Pwd");
-                    //user_obj.EA_ID = Json_Util.get_Value(read_user, "EA_ID"); //追加予定(更新)
-                    user_obj.EA_ID = "0001";
+                    user_obj.EA_ID = Json_Util.get_Value(read_user, "EA_ID");
                     user_obj.EA_Name = Json_Util.get_Value(read_user, "EA_Name");
                     user_obj.Course = Json_Util.get_Value(read_user, "Course");
                     user_obj.Ccy = Json_Util.get_Value(read_user, "Ccy");
                     user_obj.Time_Period = Json_Util.get_Value(read_user, "Time_Period");
+                    user_obj.Vol_1shot = Json_Util.get_Value(read_user, "Vol_1shot");
+                    user_obj.A_Start = Json_Util.get_Value(read_user, "A_Start");
                     user_obj.Init_Status = Json_Util.get_Value(read_user, "Check_Status");
                     OK_user_list.Add(user_obj);
                 }

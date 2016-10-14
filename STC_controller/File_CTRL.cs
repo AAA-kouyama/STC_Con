@@ -25,7 +25,7 @@ namespace STC_controller
         {
             try
             {
-                string folder = @"C:\Users\GFIT\" + user.Stc_ID + @"\" + user.Broker_Name + @"\" + user.MT4_ID + @"\" + user.Ccy + @"\" + user.Time_Period + @"\" + user.EA_Name;
+                string folder = @"C:\Users\GFIT\" + user.Stc_ID + @"\" + user.MT4_Server + @"\" + user.MT4_ID + @"\" + user.Ccy + @"\" + user.Time_Period + @"\" + user.EA_Name;
                 stc_ID = user.Stc_ID;
                 ins_path = folder;
                 if (!System.IO.Directory.Exists(folder)){

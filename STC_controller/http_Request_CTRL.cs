@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -22,18 +24,22 @@ namespace STC_controller
         private static string username = "gfitadmin";
         private static string password = "Lvf24q6ngn4o";
 
+
         public static string http_get(string url, out bool status)
         {
             try
             {
+                // オレオレ証明を強制的に正常証明とするクラスを呼び出します。
+                System.Net.ServicePointManager.CertificatePolicy = new TrustAllCertificatePolicy();
+
                 //HttpWebRequestを作成
                 System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
                 //または、
                 //System.Net.WebRequest webreq = System.Net.WebRequest.Create(url);
-
+                
                 //認証の設定
                 webreq.Credentials = new System.Net.NetworkCredential(username, password);
-
+                
                 //サーバーからの応答を受信するためのHttpWebResponseを取得
                 System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();
                 //または、
@@ -165,7 +171,24 @@ namespace STC_controller
             return result;
         }
 
-        
+
 
     }
+
+
+    // ステージング環境で証明書がオレオレ証明なのでチェックを回避するために追加実装
+    // オレオレでも正しいと強制設定するクラスです。
+    public class TrustAllCertificatePolicy : System.Net.ICertificatePolicy
+    {
+
+        public TrustAllCertificatePolicy() { }
+        public bool CheckValidationResult(System.Net.ServicePoint sp,
+            System.Security.Cryptography.X509Certificates.X509Certificate cert,
+            System.Net.WebRequest req,
+            int problem)
+        {
+            return true;
+        }
+    }
+
 }

@@ -26,13 +26,15 @@ namespace STC_controller
             dic.Add("Stc_ID", 10);
             dic.Add("Request_Time", 30);
             dic.Add("Ope_Code", 10);
-            //dic.Add("EA_ID", 4); // 追加予定
+            dic.Add("EA_ID", 4);
             dic.Add("Broker_Name", 40);
             dic.Add("EA_Name", 60);
             dic.Add("MT4_Server", 40);
             dic.Add("MT4_ID", 20);
             dic.Add("Ccy", 10);
             dic.Add("Time_Period", 10);
+            dic.Add("Vol_1shot", 10);
+            //dic.Add("A_Start", 10);
 
             return dic;
         }

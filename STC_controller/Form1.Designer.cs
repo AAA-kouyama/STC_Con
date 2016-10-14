@@ -34,6 +34,10 @@
             this.tmr_rquest = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label20 = new System.Windows.Forms.Label();
+            this.btn_recover = new System.Windows.Forms.Button();
+            this.tgl_MT4_watch = new System.Windows.Forms.CheckBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tgl_socket = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -51,6 +55,7 @@
             this.txt_out_put = new System.Windows.Forms.TextBox();
             this.txt_get_url = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rdo_url_add_EA = new System.Windows.Forms.RadioButton();
             this.rdo_url_request = new System.Windows.Forms.RadioButton();
             this.rdo_url_add_user = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
@@ -70,6 +75,7 @@
             this.rdo_get_url_add_user = new System.Windows.Forms.RadioButton();
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btn_Conn_Watch = new System.Windows.Forms.Button();
             this.btn_csv_read = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -92,10 +98,10 @@
             this.btn_create_folders = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.btn_Conn_Watch = new System.Windows.Forms.Button();
             this.tmr_conn_watch = new System.Windows.Forms.Timer(this.components);
-            this.label19 = new System.Windows.Forms.Label();
-            this.tgl_MT4_watch = new System.Windows.Forms.CheckBox();
+            this.rdo_stg = new System.Windows.Forms.RadioButton();
+            this.rdo_real = new System.Windows.Forms.RadioButton();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -133,6 +139,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label21);
+            this.tabPage1.Controls.Add(this.rdo_real);
+            this.tabPage1.Controls.Add(this.rdo_stg);
+            this.tabPage1.Controls.Add(this.label20);
+            this.tabPage1.Controls.Add(this.btn_recover);
             this.tabPage1.Controls.Add(this.tgl_MT4_watch);
             this.tabPage1.Controls.Add(this.label19);
             this.tabPage1.Controls.Add(this.label15);
@@ -152,6 +163,46 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "起動設定関連";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 191);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(101, 12);
+            this.label20.TabIndex = 56;
+            this.label20.Text = "最終指示状態再現";
+            // 
+            // btn_recover
+            // 
+            this.btn_recover.Location = new System.Drawing.Point(18, 230);
+            this.btn_recover.Name = "btn_recover";
+            this.btn_recover.Size = new System.Drawing.Size(75, 23);
+            this.btn_recover.TabIndex = 55;
+            this.btn_recover.Text = "再現実行";
+            this.btn_recover.UseVisualStyleBackColor = true;
+            this.btn_recover.Click += new System.EventHandler(this.btn_recover_Click);
+            // 
+            // tgl_MT4_watch
+            // 
+            this.tgl_MT4_watch.Appearance = System.Windows.Forms.Appearance.Button;
+            this.tgl_MT4_watch.AutoSize = true;
+            this.tgl_MT4_watch.Location = new System.Drawing.Point(262, 43);
+            this.tgl_MT4_watch.Name = "tgl_MT4_watch";
+            this.tgl_MT4_watch.Size = new System.Drawing.Size(74, 22);
+            this.tgl_MT4_watch.TabIndex = 54;
+            this.tgl_MT4_watch.Text = "watch false";
+            this.tgl_MT4_watch.UseVisualStyleBackColor = true;
+            this.tgl_MT4_watch.CheckedChanged += new System.EventHandler(this.tgl_MT4_watch_CheckedChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(260, 3);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(99, 12);
+            this.label19.TabIndex = 53;
+            this.label19.Text = "MT4接続状況監視";
             // 
             // label15
             // 
@@ -271,7 +322,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(217, 37);
+            this.label14.Location = new System.Drawing.Point(3, 57);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(256, 12);
             this.label14.TabIndex = 48;
@@ -280,7 +331,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 82);
+            this.label7.Location = new System.Drawing.Point(10, 110);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(75, 12);
             this.label7.TabIndex = 47;
@@ -289,7 +340,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 60);
+            this.label6.Location = new System.Drawing.Point(10, 88);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 12);
             this.label6.TabIndex = 46;
@@ -297,33 +348,45 @@
             // 
             // txt_out_put
             // 
-            this.txt_out_put.Location = new System.Drawing.Point(110, 79);
+            this.txt_out_put.Location = new System.Drawing.Point(110, 107);
             this.txt_out_put.Name = "txt_out_put";
             this.txt_out_put.Size = new System.Drawing.Size(243, 19);
             this.txt_out_put.TabIndex = 45;
             // 
             // txt_get_url
             // 
-            this.txt_get_url.Location = new System.Drawing.Point(110, 57);
+            this.txt_get_url.Location = new System.Drawing.Point(110, 85);
             this.txt_get_url.Name = "txt_get_url";
             this.txt_get_url.Size = new System.Drawing.Size(243, 19);
             this.txt_get_url.TabIndex = 44;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.rdo_url_add_EA);
             this.groupBox2.Controls.Add(this.rdo_url_request);
             this.groupBox2.Controls.Add(this.rdo_url_add_user);
             this.groupBox2.Location = new System.Drawing.Point(4, 18);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(207, 36);
+            this.groupBox2.Size = new System.Drawing.Size(397, 36);
             this.groupBox2.TabIndex = 43;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "リクエストＵＲＬ選択";
             // 
+            // rdo_url_add_EA
+            // 
+            this.rdo_url_add_EA.AutoSize = true;
+            this.rdo_url_add_EA.Location = new System.Drawing.Point(102, 17);
+            this.rdo_url_add_EA.Name = "rdo_url_add_EA";
+            this.rdo_url_add_EA.Size = new System.Drawing.Size(83, 16);
+            this.rdo_url_add_EA.TabIndex = 22;
+            this.rdo_url_add_EA.TabStop = true;
+            this.rdo_url_add_EA.Text = "add_EA.json";
+            this.rdo_url_add_EA.UseVisualStyleBackColor = true;
+            // 
             // rdo_url_request
             // 
             this.rdo_url_request.AutoSize = true;
-            this.rdo_url_request.Location = new System.Drawing.Point(106, 17);
+            this.rdo_url_request.Location = new System.Drawing.Point(303, 14);
             this.rdo_url_request.Name = "rdo_url_request";
             this.rdo_url_request.Size = new System.Drawing.Size(88, 16);
             this.rdo_url_request.TabIndex = 21;
@@ -353,7 +416,7 @@
             // 
             // btn_http_get
             // 
-            this.btn_http_get.Location = new System.Drawing.Point(357, 77);
+            this.btn_http_get.Location = new System.Drawing.Point(357, 105);
             this.btn_http_get.Name = "btn_http_get";
             this.btn_http_get.Size = new System.Drawing.Size(75, 23);
             this.btn_http_get.TabIndex = 41;
@@ -535,6 +598,16 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "デバッグ関連２";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // btn_Conn_Watch
+            // 
+            this.btn_Conn_Watch.Location = new System.Drawing.Point(89, 240);
+            this.btn_Conn_Watch.Name = "btn_Conn_Watch";
+            this.btn_Conn_Watch.Size = new System.Drawing.Size(75, 23);
+            this.btn_Conn_Watch.TabIndex = 60;
+            this.btn_Conn_Watch.Text = "Conn Watch";
+            this.btn_Conn_Watch.UseVisualStyleBackColor = true;
+            this.btn_Conn_Watch.Click += new System.EventHandler(this.btn_Conn_Watch_Click);
             // 
             // btn_csv_read
             // 
@@ -748,46 +821,52 @@
             this.label17.TabIndex = 62;
             this.label17.Text = "フォルダ復旧用ファイルパス";
             // 
-            // btn_Conn_Watch
-            // 
-            this.btn_Conn_Watch.Location = new System.Drawing.Point(89, 240);
-            this.btn_Conn_Watch.Name = "btn_Conn_Watch";
-            this.btn_Conn_Watch.Size = new System.Drawing.Size(75, 23);
-            this.btn_Conn_Watch.TabIndex = 60;
-            this.btn_Conn_Watch.Text = "Conn Watch";
-            this.btn_Conn_Watch.UseVisualStyleBackColor = true;
-            this.btn_Conn_Watch.Click += new System.EventHandler(this.btn_Conn_Watch_Click);
-            // 
             // tmr_conn_watch
             // 
             this.tmr_conn_watch.Interval = 60000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
-            // label19
+            // rdo_stg
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(260, 3);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(99, 12);
-            this.label19.TabIndex = 53;
-            this.label19.Text = "MT4接続状況監視";
+            this.rdo_stg.AutoSize = true;
+            this.rdo_stg.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rdo_stg.ForeColor = System.Drawing.Color.DarkBlue;
+            this.rdo_stg.Location = new System.Drawing.Point(8, 115);
+            this.rdo_stg.Name = "rdo_stg";
+            this.rdo_stg.Size = new System.Drawing.Size(111, 16);
+            this.rdo_stg.TabIndex = 57;
+            this.rdo_stg.TabStop = true;
+            this.rdo_stg.Text = "ステージング接続";
+            this.rdo_stg.UseVisualStyleBackColor = true;
+            this.rdo_stg.CheckedChanged += new System.EventHandler(this.rdo_stg_CheckedChanged);
             // 
-            // tgl_MT4_watch
+            // rdo_real
             // 
-            this.tgl_MT4_watch.Appearance = System.Windows.Forms.Appearance.Button;
-            this.tgl_MT4_watch.AutoSize = true;
-            this.tgl_MT4_watch.Location = new System.Drawing.Point(262, 43);
-            this.tgl_MT4_watch.Name = "tgl_MT4_watch";
-            this.tgl_MT4_watch.Size = new System.Drawing.Size(74, 22);
-            this.tgl_MT4_watch.TabIndex = 54;
-            this.tgl_MT4_watch.Text = "watch false";
-            this.tgl_MT4_watch.UseVisualStyleBackColor = true;
-            this.tgl_MT4_watch.CheckedChanged += new System.EventHandler(this.tgl_MT4_watch_CheckedChanged);
+            this.rdo_real.AutoSize = true;
+            this.rdo_real.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rdo_real.ForeColor = System.Drawing.Color.Green;
+            this.rdo_real.Location = new System.Drawing.Point(125, 115);
+            this.rdo_real.Name = "rdo_real";
+            this.rdo_real.Size = new System.Drawing.Size(75, 16);
+            this.rdo_real.TabIndex = 58;
+            this.rdo_real.TabStop = true;
+            this.rdo_real.Text = "本番接続";
+            this.rdo_real.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 100);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(65, 12);
+            this.label21.TabIndex = 59;
+            this.label21.Text = "接続先設定";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(528, 315);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -884,6 +963,12 @@
         private System.Windows.Forms.Timer tmr_conn_watch;
         private System.Windows.Forms.CheckBox tgl_MT4_watch;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.RadioButton rdo_url_add_EA;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button btn_recover;
+        private System.Windows.Forms.RadioButton rdo_real;
+        private System.Windows.Forms.RadioButton rdo_stg;
+        private System.Windows.Forms.Label label21;
     }
 }
 
