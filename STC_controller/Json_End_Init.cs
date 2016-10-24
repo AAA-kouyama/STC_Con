@@ -36,7 +36,8 @@ namespace STC_controller
                     user_obj.Join_Time = Json_Util.get_Value(read_user, "Join_Time");
                     user_obj.Join_Time2 = Json_Util.get_Value(read_user, "Join_Time2");
                     user_obj.Launch_Time = Json_Util.iso_8601_now();
-                    user_obj.Machine_Name = "Jupiter";
+                    //user_obj.Machine_Name = "Jupiter";
+                    user_obj.Machine_Name = MainForm.machine_name;
                     user_obj.Broker_Name = Json_Util.get_Value(read_user, "Broker_Name");
                     user_obj.MT4_Server = Json_Util.get_Value(read_user, "MT4_Server");
                     user_obj.MT4_ID = Json_Util.get_Value(read_user, "MT4_ID");

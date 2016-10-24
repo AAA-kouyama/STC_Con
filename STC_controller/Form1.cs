@@ -32,6 +32,8 @@ namespace STC_controller
 
         private retry_timer Retry_Timer;
 
+        public static string machine_name = "";
+
         public MainForm()
         {
             InitializeComponent();
@@ -43,7 +45,10 @@ namespace STC_controller
 
             // テストサーバーへの接続を設定
             rdo_stg.Checked = true;
-            
+
+            // マシン名のファイル読み込み
+            machine_name = File_CTRL.file_Read(@"./Machine_Name.txt");
+            lbl_Machine_Name.Text = machine_name;
 
         }
 

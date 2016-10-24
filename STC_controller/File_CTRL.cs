@@ -393,6 +393,11 @@ namespace STC_controller
 
         }
 
+        public static bool check_file(string folder_path, string file_name)
+        {
+            return File.Exists(folder_path + @"\" + file_name);
+        }
+
 
     }
 }

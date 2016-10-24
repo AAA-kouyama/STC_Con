@@ -36,6 +36,7 @@ namespace STC_controller
                     req_obj.Ope_Number = Json_Util.get_Value(read_req, "Ope_Number");
                     req_obj.Stc_ID = Json_Util.get_Value(read_req, "Stc_ID");
                     req_obj.Request_Time = Json_Util.get_Value(read_req, "Request_Time");
+                    req_obj.Machine_Name = MainForm.machine_name;
                     req_obj.Response_Time = Json_Util.iso_8601_now();
                     req_obj.EA_ID = Json_Util.get_Value(read_req, "EA_ID");
                     req_obj.Broker_Name = Json_Util.get_Value(read_req, "Broker_Name");

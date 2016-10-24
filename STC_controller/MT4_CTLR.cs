@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -39,79 +40,88 @@ namespace STC_controller
 
                 string req_error = "";
 
-                switch (ope_code)
+                // 自分のマシン名と一致するか確認
+                if (Json_Util.get_Value(read_req, "Machine_Name") == MainForm.machine_name)
                 {
-                    case "start": // MT4起動&自動売買開始
-                        start_mode(read_req, out status, out req_error, true);
-                        req_errors = req_errors + req_error;
-                        break;
-                    case "stop": // MT4停止&自動売買停止
-                        stop_mode(read_req, out status, out req_error);
-                        req_errors = req_errors + req_error;
-                        break;
-                    case "reload": // MT4再起動
-                        status = program_watch(read_req, out req_error);
-                        req_errors = req_errors + req_error;
-                        if (status)
-                        {
-                            // (OFF→ON→OFF)で浦島様の指定
-                            // 停止処理
+                    switch (ope_code)
+                    {
+                        case "start": // MT4起動&自動売買開始
+                            start_mode(read_req, out status, out req_error, true);
+                            req_errors = req_errors + req_error;
+                            break;
+                        case "stop": // MT4停止&自動売買停止
                             stop_mode(read_req, out status, out req_error);
                             req_errors = req_errors + req_error;
-
-                            // 開始処理
-                            start_mode(read_req, out status, out req_error, false);
+                            break;
+                        case "reload": // MT4再起動
+                            status = program_watch(read_req, out req_error);
                             req_errors = req_errors + req_error;
-                        }
-                        else
-                        {
-                            // (ON→OFF→ON)で浦島様の指定
-                            // 開始処理
-                            start_mode(read_req, out status, out req_error, false);
+                            if (status)
+                            {
+                                // (OFF→ON→OFF)で浦島様の指定
+                                // 停止処理
+                                stop_mode(read_req, out status, out req_error);
+                                req_errors = req_errors + req_error;
+
+                                // 開始処理
+                                start_mode(read_req, out status, out req_error, false);
+                                req_errors = req_errors + req_error;
+                            }
+                            else
+                            {
+                                // (ON→OFF→ON)で浦島様の指定
+                                // 開始処理
+                                start_mode(read_req, out status, out req_error, false);
+                                req_errors = req_errors + req_error;
+
+                                // 停止処理
+                                stop_mode(read_req, out status, out req_error);
+                                req_errors = req_errors + req_error;
+                            }
+
+                            break;
+
+                        case "status": // STCログイン時のMT4起動状態応答用
+                            get_status(read_req, out status, out req_error);
                             req_errors = req_errors + req_error;
+                            break;
 
-                            // 停止処理
-                            stop_mode(read_req, out status, out req_error);
+                        case "outage": // 退会処理(未テストなのでKaz様と打ち合わせてテストしましょう)
+                            uninst_mode(read_req, out status, out req_error);
                             req_errors = req_errors + req_error;
-                        }
+                            break;
 
-                        break;
+                        case "mod_ea": // EAの設定変更
 
-                    case "status": // STCログイン時のMT4起動状態応答用
-                        get_status(read_req, out status, out req_error);
-                        req_errors = req_errors + req_error;
-                        break;
+                            break;
 
-                    case "outage": // 退会処理(未テストなのでKaz様と打ち合わせてテストしましょう)
-                        uninst_mode(read_req, out status, out req_error);
-                        req_errors = req_errors + req_error;
-                        break;
+                        case "mod_brok": // ブローカーの設定変更
 
-                    case "mod_ea": // EAの設定変更
+                            break;
 
-                        break;
+                        case "watch_s": // 起動状態の監視
+                            watch_mode(read_req, out status, out req_error);
+                            req_errors = req_errors + req_error;
+                            break;
+                        case "watch_r": // 再起動状態の監視
+                            watch_mode(read_req, out status, out req_error);
+                            req_errors = req_errors + req_error;
+                            break;
 
-                    case "mod_brok": // ブローカーの設定変更
-
-                        break;
-
-                    case "watch_s": // 起動状態の監視
-                        watch_mode(read_req, out status, out req_error);
-                        req_errors = req_errors + req_error;
-                        break;
-                    case "watch_r": // 再起動状態の監視
-                        watch_mode(read_req, out status, out req_error);
-                        req_errors = req_errors + req_error;
-                        break;
-
-                    default:
-                        req_errors = req_errors + "パラメータエラー:" + ope_code;
-                        status = false;
-                        break;
+                        default:
+                            req_errors = req_errors + "パラメータエラー:" + ope_code;
+                            status = false;
+                            break;
+                    }
 
                 }
-
+                else
+                {
+                    request = null;
+                }
             }
+
+            
             error = req_errors;
             status = true;
             return request;
@@ -235,8 +245,29 @@ namespace STC_controller
             }
             else
             {
-                // MT4停止のステータス設定
-                read_req.EA_Status = "OFF";
+                // outageの場合の処理追加
+                // 起動プログラムのパス
+                string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+                string file_path = folder_path + @"\terminal.exe";
+                string outage_file_path = folder_path + @"\@terminal.exe";
+
+                // プログラムの存在判断
+                if (File.Exists(file_path))
+                {
+                    // MT4停止のステータス設定
+                    read_req.EA_Status = "OFF";
+                }
+                else if (File.Exists(outage_file_path))
+                {
+                    // MT4停止のステータス設定 期限切れ
+                    read_req.EA_Status = "outage";
+                }
+                else
+                {
+                    // MT4停止のステータス設定 存在していないのでUNKNOWN
+                    read_req.EA_Status = "UNKNOWN";
+                }
+
             }
 
             error = "";
@@ -270,7 +301,7 @@ namespace STC_controller
             if (status)
             {
                 error = "";
-                read_req.EA_Status = "OFF";
+                read_req.EA_Status = "outage";
 
                 // 指示をファイルに出力する機能の追加予定地
                 string last_order = "outage";
@@ -279,8 +310,18 @@ namespace STC_controller
             }
             else
             {
-                error = "リネーム失敗";
-                read_req.EA_Status = "UNKNOWN";
+                if (File.Exists(folder_path + @"\@terminal.exe"))
+                {
+                    // outageが既に行われている場合の応答
+                    error = "";
+                    read_req.EA_Status = "outage";
+                }
+                else
+                {
+                    // outage対象が存在していない場合の応答
+                    error = "リネーム失敗";
+                    read_req.EA_Status = "UNKNOWN";
+              }
             }
             
             return read_req;

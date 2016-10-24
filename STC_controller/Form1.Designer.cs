@@ -34,6 +34,11 @@
             this.tmr_rquest = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lbl_Machine_Name = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.rdo_real = new System.Windows.Forms.RadioButton();
+            this.rdo_stg = new System.Windows.Forms.RadioButton();
             this.label20 = new System.Windows.Forms.Label();
             this.btn_recover = new System.Windows.Forms.Button();
             this.tgl_MT4_watch = new System.Windows.Forms.CheckBox();
@@ -99,9 +104,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.tmr_conn_watch = new System.Windows.Forms.Timer(this.components);
-            this.rdo_stg = new System.Windows.Forms.RadioButton();
-            this.rdo_real = new System.Windows.Forms.RadioButton();
-            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -139,6 +141,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lbl_Machine_Name);
+            this.tabPage1.Controls.Add(this.label22);
             this.tabPage1.Controls.Add(this.label21);
             this.tabPage1.Controls.Add(this.rdo_real);
             this.tabPage1.Controls.Add(this.rdo_stg);
@@ -164,6 +168,62 @@
             this.tabPage1.Text = "起動設定関連";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // lbl_Machine_Name
+            // 
+            this.lbl_Machine_Name.AutoSize = true;
+            this.lbl_Machine_Name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_Machine_Name.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lbl_Machine_Name.Location = new System.Drawing.Point(6, 22);
+            this.lbl_Machine_Name.Name = "lbl_Machine_Name";
+            this.lbl_Machine_Name.Size = new System.Drawing.Size(101, 18);
+            this.lbl_Machine_Name.TabIndex = 61;
+            this.lbl_Machine_Name.Text = "マシン名表示";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 5);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(45, 12);
+            this.label22.TabIndex = 60;
+            this.label22.Text = "マシン名";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(292, 5);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(65, 12);
+            this.label21.TabIndex = 59;
+            this.label21.Text = "接続先設定";
+            // 
+            // rdo_real
+            // 
+            this.rdo_real.AutoSize = true;
+            this.rdo_real.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rdo_real.ForeColor = System.Drawing.Color.Green;
+            this.rdo_real.Location = new System.Drawing.Point(411, 20);
+            this.rdo_real.Name = "rdo_real";
+            this.rdo_real.Size = new System.Drawing.Size(75, 16);
+            this.rdo_real.TabIndex = 58;
+            this.rdo_real.TabStop = true;
+            this.rdo_real.Text = "本番接続";
+            this.rdo_real.UseVisualStyleBackColor = true;
+            // 
+            // rdo_stg
+            // 
+            this.rdo_stg.AutoSize = true;
+            this.rdo_stg.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rdo_stg.ForeColor = System.Drawing.Color.DarkBlue;
+            this.rdo_stg.Location = new System.Drawing.Point(294, 20);
+            this.rdo_stg.Name = "rdo_stg";
+            this.rdo_stg.Size = new System.Drawing.Size(111, 16);
+            this.rdo_stg.TabIndex = 57;
+            this.rdo_stg.TabStop = true;
+            this.rdo_stg.Text = "ステージング接続";
+            this.rdo_stg.UseVisualStyleBackColor = true;
+            this.rdo_stg.CheckedChanged += new System.EventHandler(this.rdo_stg_CheckedChanged);
+            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -187,7 +247,7 @@
             // 
             this.tgl_MT4_watch.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_MT4_watch.AutoSize = true;
-            this.tgl_MT4_watch.Location = new System.Drawing.Point(262, 43);
+            this.tgl_MT4_watch.Location = new System.Drawing.Point(260, 112);
             this.tgl_MT4_watch.Name = "tgl_MT4_watch";
             this.tgl_MT4_watch.Size = new System.Drawing.Size(74, 22);
             this.tgl_MT4_watch.TabIndex = 54;
@@ -198,7 +258,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(260, 3);
+            this.label19.Location = new System.Drawing.Point(258, 72);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(99, 12);
             this.label19.TabIndex = 53;
@@ -207,7 +267,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(154, 3);
+            this.label15.Location = new System.Drawing.Point(152, 72);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(86, 12);
             this.label15.TabIndex = 52;
@@ -217,7 +277,7 @@
             // 
             this.tgl_socket.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_socket.AutoSize = true;
-            this.tgl_socket.Location = new System.Drawing.Point(156, 43);
+            this.tgl_socket.Location = new System.Drawing.Point(154, 112);
             this.tgl_socket.Name = "tgl_socket";
             this.tgl_socket.Size = new System.Drawing.Size(68, 22);
             this.tgl_socket.TabIndex = 51;
@@ -228,7 +288,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(87, 27);
+            this.label13.Location = new System.Drawing.Point(85, 96);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(20, 12);
             this.label13.TabIndex = 50;
@@ -236,7 +296,7 @@
             // 
             // txt_request_interval
             // 
-            this.txt_request_interval.Location = new System.Drawing.Point(27, 20);
+            this.txt_request_interval.Location = new System.Drawing.Point(25, 89);
             this.txt_request_interval.Name = "txt_request_interval";
             this.txt_request_interval.Size = new System.Drawing.Size(54, 19);
             this.txt_request_interval.TabIndex = 49;
@@ -245,7 +305,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 3);
+            this.label12.Location = new System.Drawing.Point(4, 72);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(133, 12);
             this.label12.TabIndex = 48;
@@ -281,7 +341,7 @@
             // 
             this.tgl_reuest.Appearance = System.Windows.Forms.Appearance.Button;
             this.tgl_reuest.AutoSize = true;
-            this.tgl_reuest.Location = new System.Drawing.Point(8, 43);
+            this.tgl_reuest.Location = new System.Drawing.Point(6, 112);
             this.tgl_reuest.Name = "tgl_reuest";
             this.tgl_reuest.Size = new System.Drawing.Size(118, 22);
             this.tgl_reuest.TabIndex = 44;
@@ -826,42 +886,6 @@
             this.tmr_conn_watch.Interval = 60000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
-            // rdo_stg
-            // 
-            this.rdo_stg.AutoSize = true;
-            this.rdo_stg.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.rdo_stg.ForeColor = System.Drawing.Color.DarkBlue;
-            this.rdo_stg.Location = new System.Drawing.Point(8, 115);
-            this.rdo_stg.Name = "rdo_stg";
-            this.rdo_stg.Size = new System.Drawing.Size(111, 16);
-            this.rdo_stg.TabIndex = 57;
-            this.rdo_stg.TabStop = true;
-            this.rdo_stg.Text = "ステージング接続";
-            this.rdo_stg.UseVisualStyleBackColor = true;
-            this.rdo_stg.CheckedChanged += new System.EventHandler(this.rdo_stg_CheckedChanged);
-            // 
-            // rdo_real
-            // 
-            this.rdo_real.AutoSize = true;
-            this.rdo_real.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.rdo_real.ForeColor = System.Drawing.Color.Green;
-            this.rdo_real.Location = new System.Drawing.Point(125, 115);
-            this.rdo_real.Name = "rdo_real";
-            this.rdo_real.Size = new System.Drawing.Size(75, 16);
-            this.rdo_real.TabIndex = 58;
-            this.rdo_real.TabStop = true;
-            this.rdo_real.Text = "本番接続";
-            this.rdo_real.UseVisualStyleBackColor = true;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 100);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(65, 12);
-            this.label21.TabIndex = 59;
-            this.label21.Text = "接続先設定";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -969,6 +993,8 @@
         private System.Windows.Forms.RadioButton rdo_real;
         private System.Windows.Forms.RadioButton rdo_stg;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label lbl_Machine_Name;
+        private System.Windows.Forms.Label label22;
     }
 }
 
