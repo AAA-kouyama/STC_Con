@@ -49,6 +49,16 @@ namespace STC_controller
                     user_obj.Time_Period = Json_Util.get_Value(read_user, "Time_Period");
                     user_obj.Vol_1shot = Json_Util.get_Value(read_user, "Vol_1shot");
                     user_obj.A_Start = Json_Util.get_Value(read_user, "A_Start");
+                    // A_Startが"A_Start"の場合はOn、offの場合はOFFで応答
+                    if (Json_Util.get_Value(read_user, "A_Start") == "A_Start")
+                    {
+                        user_obj.EA_Status = "ON";
+                    }
+                    else
+                    {
+                        user_obj.EA_Status = "OFF";
+                    }
+
                     user_obj.Init_Status = Json_Util.get_Value(read_user, "Check_Status");
                     OK_user_list.Add(user_obj);
                 }

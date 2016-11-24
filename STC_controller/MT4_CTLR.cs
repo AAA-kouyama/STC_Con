@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codeplex.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace STC_controller
             
             string req_errors = "";
             status = false;
+
+            string res_request = "";
 
             foreach (dynamic read_req in (object[])request)
             {
@@ -114,17 +117,32 @@ namespace STC_controller
                             break;
                     }
 
+                    // 対象の指示のみを再結合させます
+                    if (res_request != "")
+                    {
+                        res_request = res_request + ",";
+                    }
+
+                    res_request = res_request + read_req;
+
                 }
-                else
-                {
-                    request = null;
-                }
+
             }
 
+            dynamic dyn_obj;
+
+            if (res_request != "")
+            {
+                dyn_obj = DynamicJson.Parse("[" + res_request + "]");
+            }
+            else
+            {
+                dyn_obj = null;
+            }
             
             error = req_errors;
             status = true;
-            return request;
+            return dyn_obj;
         }
 
         /// <summary>
@@ -510,6 +528,9 @@ namespace STC_controller
                                     // 強制停止後、最終指示一覧に強制停止である事を上書き
                                     File_CTRL.last_order_rewrite(pair.Key, "force_stop");
                                     // STCサーバーへ通知する機能の実装予定地
+
+
+
                                 }
 
                                 break;
