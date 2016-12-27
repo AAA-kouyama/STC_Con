@@ -44,7 +44,7 @@ namespace STC_controller
                     req_obj.MT4_ID = Json_Util.get_Value(read_req, "MT4_ID");
                     req_obj.Ccy = Json_Util.get_Value(read_req, "Ccy");
                     req_obj.Time_Period = Json_Util.get_Value(read_req, "Time_Period");
-                    req_obj.EA_Status = Json_Util.get_Value(read_req, "EA_Status").ToUpper();
+                    //req_obj.EA_Status = Json_Util.get_Value(read_req, "EA_Status").ToUpper();
                     req_obj.Ope_Code = Json_Util.get_Value(read_req, "Ope_Code");
                     req_obj.Vol_1shot = Json_Util.get_Value(read_req, "Vol_1shot");
                     req_obj.A_Start = Json_Util.get_Value(read_req, "A_Start");

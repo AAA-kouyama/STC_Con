@@ -1,5 +1,6 @@
 ﻿using Codeplex.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -265,7 +266,8 @@ namespace STC_controller
             {
                 // outageの場合の処理追加
                 // 起動プログラムのパス
-                string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+                //string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+                string folder_path = File_CTRL.get_folder_path(read_req);
                 string file_path = folder_path + @"\terminal.exe";
                 string outage_file_path = folder_path + @"\@terminal.exe";
 
@@ -305,7 +307,8 @@ namespace STC_controller
             }
 
             // 起動プログラムのパス
-            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            //string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string folder_path = File_CTRL.get_folder_path(read_req);
             string file_path = folder_path + @"\terminal.exe";
 
             status = program_CTRL.SearchProgram(file_path, out error);
@@ -396,7 +399,8 @@ namespace STC_controller
             bool status = false;
 
             // 起動プログラムのパス
-            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            //string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string folder_path = File_CTRL.get_folder_path(read_req);
             string program_path = folder_path + @"\terminal.exe";
             status = program_CTRL.StartProgram(program_path);
 
@@ -436,7 +440,8 @@ namespace STC_controller
 
             //ファイル名:C:\Users\GFIT\u00000212\OANDA-Japan Practice - デモ口座\6835252\USDJPY\H1\terminal.exe
             // 起動プログラムのパス
-            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            //string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
+            string folder_path = File_CTRL.get_folder_path(read_req);
             string file_path = folder_path + @"\terminal.exe";
 
             status = program_CTRL.SearchProgram(file_path, out error);
@@ -468,7 +473,8 @@ namespace STC_controller
 
             //ファイル名:C:\Users\GFIT\u00000212\OANDA-Japan Practice - デモ口座\6835252\USDJPY\H1\terminal.exe
             // 起動プログラムのパス
-            string file_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name + @"\terminal.exe";
+            //string file_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name + @"\terminal.exe";
+            string file_path = File_CTRL.get_folder_path(read_req) + @"\terminal.exe";
             status = program_CTRL.SearchProgram(file_path, out error);
             if (!status)
             {
@@ -494,7 +500,7 @@ namespace STC_controller
                 string watch_log_file = @"\gfit.txt";
 
                 // 最終指示状況をDictionary型で取得します。
-                Dictionary<string, string> dict = File_CTRL.csv_reader();
+                Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
 
                 foreach (var pair in dict)
                 {
@@ -528,8 +534,8 @@ namespace STC_controller
                                     // 強制停止後、最終指示一覧に強制停止である事を上書き
                                     File_CTRL.last_order_rewrite(pair.Key, "force_stop");
                                     // STCサーバーへ通知する機能の実装予定地
-
-
+                                    System.Console.WriteLine(pair.Key);
+                                    throw_force_stop_status(pair.Key);
 
                                 }
 
@@ -577,6 +583,67 @@ namespace STC_controller
 
         }
 
+        private static void throw_force_stop_status(string path_string)
+        {
+            try
+            {
+
+                // 取り敢えずここで強制停止時のJsonを生成してサーバーへ投げ込むまでの
+                // 機能実装を行ってテストしみてる！
+
+                // all_setting上のプログラムインストールパスを区切りで分割して配列に格納する
+                string[] stArrayData = path_string.Split('\\');
+
+                // データを確認する
+                /*
+                foreach (string stData in stArrayData)
+                {
+                    System.Console.WriteLine(stData);
+                }
+                System.Console.WriteLine(stArrayData[1]);
+                */
+
+                ArrayList OK_req_list = new ArrayList();
+
+
+                //定義変更時はRequest_machine_checkの項目も併せて修正しましょう！
+                dynamic req_obj = new DynamicJson(); // ルートのコンテナ
+                
+                req_obj.Ope_Number = -1;
+                req_obj.Stc_ID = stArrayData[3];
+                req_obj.Request_Time = Json_Util.iso_8601_now();
+                req_obj.Machine_Name = MainForm.machine_name;
+                req_obj.Response_Time = Json_Util.iso_8601_now();
+                req_obj.EA_ID = stArrayData[8];
+                req_obj.Broker_Name = stArrayData[4];
+                req_obj.MT4_Server = stArrayData[4];
+                req_obj.MT4_ID = stArrayData[5];
+                req_obj.Ccy = stArrayData[6];
+                req_obj.Time_Period = stArrayData[7];
+                req_obj.Ope_Code = "status";
+                req_obj.Vol_1shot = "";
+                req_obj.A_Start = "";
+
+                req_obj.EA_Status = "stop";
+
+                OK_req_list.Add(req_obj);
+                
+
+                dynamic out_put = Json_Util.reParse(OK_req_list);
+
+                // 処理結果登録
+                http_Request_CTRL.http_post(out_put.ToString(), MainForm.resultbox); //MainForm//private void rdo_stg_CheckedChanged
+                
+
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
+        }
+
+
         /// <summary>
         /// MT4の起動状況の再現をall_setting.txtを使って行います。
         /// Windowsアップデートなどでサーバーがリブートした場合に
@@ -588,7 +655,7 @@ namespace STC_controller
             {
 
                 // 最終指示状況をDictionary型で取得します。
-                Dictionary<string, string> dict = File_CTRL.csv_reader();
+                Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
 
                 foreach (var pair in dict)
                 {
@@ -653,7 +720,9 @@ namespace STC_controller
                 logger.Error(" 起動状態再現失敗: " + ex.Message);
             }
 
-}
+        }
+
+
 
 
 

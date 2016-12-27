@@ -18,7 +18,7 @@ namespace STC_controller
     public partial class MainForm : Form
     {
 
-        private static string test_server_url = "https://218.222.227.232//";
+        private static string test_server_url = "https://218.222.227.232/";
         private static string real_server_url = "https://systrade-cloud.com/";
 
         // get先URL(rdo_stg_CheckedChanged()にて設定)
@@ -28,7 +28,7 @@ namespace STC_controller
 
         // post先URL(rdo_stg_CheckedChanged()にて設定)
         private static string upload = "";
-        private static string resultbox = ""; 
+        public static string resultbox = ""; 
 
         private retry_timer Retry_Timer;
 
@@ -38,7 +38,6 @@ namespace STC_controller
         {
             InitializeComponent();
             //起動後にキュータイマー稼働
-            //tmr_retry.Enabled = true;
             Retry_Timer = new retry_timer();
             Retry_Timer.NewTimer();
             Retry_Timer.StartTimer();
@@ -47,8 +46,87 @@ namespace STC_controller
             rdo_stg.Checked = true;
 
             // マシン名のファイル読み込み
-            machine_name = File_CTRL.file_Read(@"./Machine_Name.txt");
-            lbl_Machine_Name.Text = machine_name;
+            // con_setting.txtに設定ファイルを統一
+            // machine_name = File_CTRL.file_Read(@"./Machine_Name.txt");
+            // lbl_Machine_Name.Text = machine_name;
+
+            // 起動時の設定読み込み
+            Dictionary<string, string> dict = File_CTRL.csv_reader(@"./con_setting.txt");
+
+            // 各種起動時動作を行う
+            foreach (var pair in dict)
+            {
+                switch (pair.Key)
+                {
+                    case "machine_name": // マシン名のファイル読み込み サーバー名文字列
+                        System.Console.WriteLine(pair.Value);
+                        machine_name = pair.Value;
+                        lbl_Machine_Name.Text = pair.Value;
+                        break;
+                    case "stc_server": // STC_CONの接続先サーバー test…STG環境、real…本番環境
+                        System.Console.WriteLine(pair.Value);
+                        switch (pair.Value)
+                        {
+                            case "test": // STG環境へ接続
+                                rdo_stg.Checked = true;
+                                break;
+
+                            case "real": // 本番環境へ接続
+                                rdo_real.Checked = true;
+                                break;
+
+                            default: // 当てはまらない場合はSTG環境へ接続
+                                rdo_stg.Checked = true;
+                                break;
+                        }
+
+                        break;
+                    case "recover_start": // 起動時実行状態再現 true…再現実行、false…再現はしない
+                        System.Console.WriteLine(pair.Value);
+                        if (pair.Value == "true")
+                        {
+                            btn_recover_Click(null,null);
+                        }
+                        break;
+                    case "request_timer": // リクエストポーリングタイマー true…起動時実行、false…起動時実行しない
+                        System.Console.WriteLine(pair.Value);
+                        if (pair.Value == "true")
+                        {
+                            tgl_reuest.Checked = true;
+                        } else
+                        {
+                            tgl_reuest.Checked = false;
+                        }
+
+                        break;
+                    case "sock_connect": // 監視ソケット true…起動時受入状態、false…起動時受け入れない
+                        System.Console.WriteLine(pair.Value);
+                        if (pair.Value == "true")
+                        {
+                            tgl_socket.Checked = true;
+                        }
+                        else
+                        {
+                            tgl_socket.Checked = false;
+                        }
+
+                        break;
+                    case "MT4_watch": // MT4接続監視 true…監視する、false…監視しない
+                        System.Console.WriteLine(pair.Value);
+                        if (pair.Value == "true")
+                        {
+                            tgl_MT4_watch.Checked = true;
+                        }
+                        else
+                        {
+                            tgl_MT4_watch.Checked = false;
+                        }
+                        break;
+                    default:
+                        // 設定ファイル上の指示がおかしい場合
+                        break;
+                }
+            }
 
         }
 
@@ -529,11 +607,11 @@ namespace STC_controller
         {
             try
             {
-                Dictionary<string, string> dict = File_CTRL.csv_reader();
+                Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
                 
                 dict[@"C:\Users\GFIT\u00001105\┗Ava-Demo\5997487\USDJPY\H1\ReloadTemplateEA.mq4"] = "AAA";
 
-                System.Console.WriteLine(File_CTRL.csv_writer(dict));
+                System.Console.WriteLine(File_CTRL.csv_writer("all_setting.txt", dict));
             }
             catch (System.Exception ex)
             {

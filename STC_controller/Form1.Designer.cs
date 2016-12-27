@@ -883,7 +883,7 @@
             // 
             // tmr_conn_watch
             // 
-            this.tmr_conn_watch.Interval = 60000;
+            this.tmr_conn_watch.Interval = 6000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
             // MainForm

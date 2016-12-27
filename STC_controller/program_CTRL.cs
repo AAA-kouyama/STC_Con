@@ -25,7 +25,7 @@ namespace STC_controller
 
             try
             {
-                Process.Start(ProgramPath);
+                Process.Start(ProgramPath, "/skipupdate");
                 return true;
             }
             catch (System.ComponentModel.Win32Exception ex)

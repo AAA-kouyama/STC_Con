@@ -20,7 +20,7 @@ namespace STC_controller
             //定義変更時はend_initの項目も併せて修正しましょう！
             var dic = new Dictionary<object, int>();
             dic.Add("Stc_ID", 10);
-            dic.Add("Stc_Pwd", 20);
+            dic.Add("Stc_Pwd", 255);
             dic.Add("Mail_Address", 40);
             dic.Add("Join_Time", 30);
             dic.Add("Join_Time2", 30); 

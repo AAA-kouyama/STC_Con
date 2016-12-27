@@ -14,7 +14,19 @@ namespace STC_controller
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static string enc = "UTF-8";
-        
+
+        /// <summary>
+        /// folderのパス文字列を応答します。
+        /// 至る所でパスの生成していたので関数化
+        /// </summary>
+        /// <param name="read_req">読み込みリクエスト文字列(Json)</param>
+        /// <returns></returns>
+        public static string get_folder_path(dynamic read_req)
+        {
+            string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_ID;
+            return folder_path;
+        }
+
         /// <summary>
         /// ユーザーのMT4用インストールフォルダを作成します
         /// </summary>
@@ -25,7 +37,9 @@ namespace STC_controller
         {
             try
             {
-                string folder = @"C:\Users\GFIT\" + user.Stc_ID + @"\" + user.MT4_Server + @"\" + user.MT4_ID + @"\" + user.Ccy + @"\" + user.Time_Period + @"\" + user.EA_Name;
+                //string folder = @"C:\Users\GFIT\" + user.Stc_ID + @"\" + user.MT4_Server + @"\" + user.MT4_ID + @"\" + user.Ccy + @"\" + user.Time_Period + @"\" + user.EA_Name;
+                string folder = get_folder_path(user);
+
                 stc_ID = user.Stc_ID;
                 ins_path = folder;
                 if (!System.IO.Directory.Exists(folder)){
@@ -294,7 +308,7 @@ namespace STC_controller
         /// 最終指示が格納されているall_setting.txtを読み出します。
         /// </summary>
         /// <returns>成功した場合はDictionary<string, string>で、失敗した場合はnullで応答します</returns>
-        public static Dictionary<string, string> csv_reader()
+        public static Dictionary<string, string> csv_reader(string file_name)
         {
             try
             {
@@ -302,7 +316,8 @@ namespace STC_controller
                 var dict = new Dictionary<string, string>();
 
                 // csvファイルを開く
-                using (var sr = new System.IO.StreamReader(get_CodeBase_path() + "\\all_setting.txt", Encoding.GetEncoding(enc)))
+                //using (var sr = new System.IO.StreamReader(get_CodeBase_path() + "\\all_setting.txt", Encoding.GetEncoding(enc)))
+                using (var sr = new System.IO.StreamReader(get_CodeBase_path() + "\\" + file_name, Encoding.GetEncoding(enc)))
                 {
                     // ストリームの末尾まで繰り返す
                     while (!sr.EndOfStream)
@@ -340,7 +355,7 @@ namespace STC_controller
         /// </summary>
         /// <param name="dict">全顧客の指示一覧</param>
         /// <returns>書き込み成功時true,失敗時false</returns>
-        public static bool csv_writer(Dictionary<string, string> dict)
+        public static bool csv_writer(string file_name, Dictionary<string, string> dict)
         {
             try
             {
@@ -352,7 +367,8 @@ namespace STC_controller
                 }
 
                 // 指示ファイル上書き指示
-                File_CTRL.file_OverWrite(write_text, get_CodeBase_path() + "\\all_setting.txt", false);
+                //File_CTRL.file_OverWrite(write_text, get_CodeBase_path() + "\\all_setting.txt", false);
+                File_CTRL.file_OverWrite(write_text, get_CodeBase_path() + "\\" + file_name, false);
 
                 return true;
             }
@@ -375,14 +391,14 @@ namespace STC_controller
         {
             try
             {
-                Dictionary<string, string> dict = File_CTRL.csv_reader();
+                Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
 
                 // キーの存在有無に関わらず、書き込みを行います。存在チェックをする場合はキー値で値を取り出すとエラートラップできます。
                 // string test = dict[folder_path];
                 // この様な形でやるとキーエラーが発生します。
                 dict[folder_path] = last_order;
 
-                return csv_writer(dict);
+                return csv_writer("all_setting.txt", dict);
             }
             catch (System.Exception ex)
             {
