@@ -110,6 +110,12 @@ namespace STC_controller
                 case "reload":
                     return_json = Create_return_json_reload(req_obj, read_req);
                     break;
+                case "mod_ea":
+                    return_json = Create_return_json_mod_ea(req_obj, read_req);
+                    break;
+                case "mod_brok":
+                    //return_json = Create_return_json_mod_brok(req_obj, read_req);
+                    break;
                 case "watch_s":
                     return_json = Create_return_json_watch_s(req_obj, read_req);
                     break;
@@ -163,6 +169,20 @@ namespace STC_controller
             //return req_obj;
             return null;
         }
+
+        private static dynamic Create_return_json_mod_ea(dynamic req_obj, dynamic read_req)
+        {
+            // 元のJsonのライブラリを改変してOpe_Tag用の1段階ネストを追加
+            // System.Console.WriteLine(Json_Util.get_Ope_Tag_Value(read_req, "header"));
+            // System.Console.WriteLine(Json_Util.get_Ope_Tag_Value(read_req, "param"));
+
+            req_obj.Ope_Tag = new { }; // Ope_Tagのオブジェクトの追加
+            req_obj.Ope_Tag.header = Json_Util.get_Ope_Tag_Value(read_req, "header");
+            req_obj.Ope_Tag.param = Json_Util.get_Ope_Tag_Value(read_req, "param");
+
+            return req_obj;
+        }
+
 
         private static dynamic Create_return_json_watch_s(dynamic req_obj, dynamic read_req)
         {

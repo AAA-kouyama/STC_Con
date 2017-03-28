@@ -215,6 +215,16 @@ namespace Codeplex.Data
             return "";
         }
 
+        public string IsDefined_getOpe_Tag_Value(string name)
+        {
+            if (IsObject && (xml.Element("Ope_Tag").Element(name) != null))
+            {
+                return xml.Element("Ope_Tag").Element(name).Value;
+            }
+
+            return "";
+        }
+
         /// <summary>has property or not</summary>
         public bool IsDefined(int index)
         {

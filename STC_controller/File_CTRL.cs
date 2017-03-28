@@ -414,6 +414,65 @@ namespace STC_controller
             return File.Exists(folder_path + @"\" + file_name);
         }
 
+        /// <summary>
+        /// 古いログファイルを削除します。
+        /// </summary>
+        /// <returns></returns>
+        public static bool log_file_del()
+        {
+            // 何日前かを設定しています
+            double beforeCount = -90;
+            string log_file_path = "";
 
+            try
+            {
+                // log4netのxmlファイルに指定されているログファイルの出力先を取得
+                foreach (log4net.Appender.IAppender appender in logger.Logger.Repository.GetAppenders())
+                {
+                    log4net.Appender.FileAppender fileAppender = appender as log4net.Appender.FileAppender;
+                    if (fileAppender != null)
+                    {
+                        log_file_path = fileAppender.File.ToString().Substring(0, fileAppender.File.ToString().Length - 19);
+                        //System.Console.WriteLine(log_file_path);
+                    }
+                }
+
+                // ファイル一覧を取得してファイルのタイムスタンプと比較を行い削除する方向で。。。
+                //System.Console.WriteLine(System.DateTime.Now.AddDays(beforeCount).ToString("yyyyMMdd"));
+
+                //log_file_path以下のファイルをすべて取得する
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(log_file_path);
+                IEnumerable<System.IO.FileInfo> files = di.EnumerateFiles("*", System.IO.SearchOption.AllDirectories);
+
+                //ファイルを列挙する
+                foreach (System.IO.FileInfo f in files)
+                {
+                    //System.Console.WriteLine(f.FullName);
+                    //Console.WriteLine(System.IO.File.GetCreationTime(f.FullName));
+                    //Console.WriteLine(System.IO.File.GetCreationTime(f.FullName).CompareTo(System.DateTime.Now.AddDays(beforeCount)));
+                    //指定された日付以前に作成されているログを削除します
+                    if (System.IO.File.GetCreationTime(f.FullName).CompareTo(System.DateTime.Now.AddDays(beforeCount)) == -1)
+                    {
+                        System.Console.WriteLine(f.FullName);
+                        // 対象を削除
+                        System.IO.File.Delete(f.FullName);
+                    }
+                    
+                }
+
+                // System.DateTime.Now.ToString("yyyyMMdd");
+
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                // ファイルを開くのに失敗したとき
+                logger.Error(" ログファイル削除失敗: " + ex.Message);
+                return false;
+            }
+
+
+            
+        }
     }
 }

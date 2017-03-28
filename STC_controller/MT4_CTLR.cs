@@ -96,7 +96,9 @@ namespace STC_controller
                             break;
 
                         case "mod_ea": // EAの設定変更
-
+                            //Ope_tag部分の出力機能を追加する予定です！
+                            mod_ea_mode(read_req, out status, out req_error);
+                            req_errors = req_errors + req_error;
                             break;
 
                         case "mod_brok": // ブローカーの設定変更
@@ -261,7 +263,28 @@ namespace STC_controller
             {
                 // MT4起動中のステータス設定
                 read_req.EA_Status = "ON";
-            }
+
+                Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
+                string file_path = File_CTRL.get_folder_path(read_req);
+
+                Console.WriteLine("リクエスト上のファイルパスは" + file_path);
+
+                foreach (var pair in dict)
+                {
+                    Console.WriteLine("Dic設定上の" + pair.Key + "は" + pair.Value);
+                    if (pair.Key == file_path)
+                    {
+                        if (pair.Value == "force_stop")
+                        {
+                            read_req.EA_Status = "OFF";
+                        }
+                        break;
+                    }
+                }
+
+                    // MT4は起動しているが通信が切断している場合の判断を追加
+
+                }
             else
             {
                 // outageの場合の処理追加
@@ -387,6 +410,105 @@ namespace STC_controller
         }
 
         /// <summary>
+        /// EAパラメータの変更を受信してパラメータ内容をファイルに出力します。
+        /// </summary>
+        /// <param name="read_req">request.jsonの１レコード</param>
+        /// <param name="status">処理結果(基本的にtreu)</param>
+        /// <param name="error">監視時のエラー情報</param>
+        /// <returns></returns>
+        private static dynamic mod_ea_mode(dynamic read_req, out bool status, out string error)
+        {
+
+            status = false;
+            error = "";
+
+            // パラメータチェック結果判定
+            if (read_req.Check_Status == "NG")
+            {
+                error = "事前チェックエラー";
+                status = false;
+                return read_req;
+            }
+
+
+            // portableオプションの確認ロジックを追加予定 mt4_optはtgl_MT4_option.Checkedの値を格納しています
+            if (MainForm.mt4_opt)
+            {
+                // ファイルを指定のMT4のFILEフォルダーに書き出し
+                status = output_ea_param(read_req, out error);
+
+                if (status)
+                {
+                    // MT4が起動しているか確認してEA_Status　ON/OFF/NGで結果を準備
+                    get_status(read_req, out status, out error);
+
+                    if (read_req.EA_Status == "ON")
+                    {
+                        string req_error = "";
+
+                        // 再起動する ステータスNGは見てません
+                        // 停止処理
+                        stop_mode(read_req, out status, out req_error);
+                        error += req_error;
+
+                        // 開始処理
+                        start_mode(read_req, out status, out req_error, false);
+                        error += req_error;
+
+                    }
+                }
+                else
+                {
+                    // ファイル出力失敗時はNGステータス(UNKOWNにて)でサーバーへ通知
+                    read_req.Check_Status = "NG";
+                }
+            }
+            else
+            {
+                read_req.Check_Status = "NG";
+            }
+
+
+            return read_req;
+        }
+        
+        /// <summary>
+        /// EA用のパラメータファイルを出力します。
+        /// STC_サーバーからOpe_Tagの内容をそのままファイル出力します。
+        /// </summary>
+        /// <param name="read_req"></param>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        private static bool output_ea_param(dynamic read_req, out string error)
+        {
+            // 作成中
+            error = "";
+            try
+            {
+
+                // EAパラメータファイル出力先のMT4起動プログラムのパス
+                string out_put_full_path = File_CTRL.get_folder_path(read_req) + @"\MQL4\Files\read_parameters.csv";
+
+                string param = "";
+                param += Json_Util.get_Ope_Tag_Value(read_req, "header");
+                param += "\r";
+                param += Json_Util.get_Ope_Tag_Value(read_req, "param");
+
+                File_CTRL.file_OverWrite(param, out_put_full_path, false);
+
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                error = ex.Message;
+                return false;
+
+            }
+
+        }
+
+        /// <summary>
         /// 起動動作を行います。
         /// 起動後、直ぐにOSのプロセスIDで起動開始しているか確認を行います。
         /// </summary>
@@ -402,8 +524,17 @@ namespace STC_controller
             //string folder_path = @"C:\Users\GFIT\" + read_req.Stc_ID + @"\" + read_req.MT4_Server + @"\" + read_req.MT4_ID + @"\" + read_req.Ccy + @"\" + read_req.Time_Period + @"\" + read_req.EA_Name;
             string folder_path = File_CTRL.get_folder_path(read_req);
             string program_path = folder_path + @"\terminal.exe";
-            status = program_CTRL.StartProgram(program_path);
+            string option_param = "/portable /skipupdate";
 
+            if (MainForm.mt4_opt)
+            {
+                status = program_CTRL.StartProgram(program_path, option_param);
+            }
+            else
+            {
+                status = program_CTRL.StartProgram(program_path);
+            }
+            
             if (!status)
             {
                 error = "起動失敗しました。";
@@ -497,6 +628,9 @@ namespace STC_controller
             try
             {
 
+                // MT4の監視機能ではありますが、ログ掃除もここに配置しておく
+                File_CTRL.log_file_del();
+
                 string watch_log_file = @"\gfit.txt";
 
                 // 最終指示状況をDictionary型で取得します。
@@ -522,11 +656,11 @@ namespace STC_controller
                                     // 通知後に該当のMT4を強制停止
                                     Console.WriteLine("強制停止");
                                     string err = "";
-                                    if (program_CTRL.SearchProgram(pair.Key + @"\terminal.exe", out err))
-                                    {
+                                    if (!program_CTRL.SearchProgram(pair.Key + @"\terminal.exe", out err)) // 否定ＩＦに変更して下記をコメントアウト
+                                    /*{
                                         program_CTRL.StopProgram(pair.Key + @"\terminal.exe");
                                     }
-                                    else
+                                    else*/
                                     {
                                         logger.Error(" 接続監視失敗 停止対象のプログラムがOS上で見つかりませんでした パス:" + pair.Key + " 最終指示:" + pair.Value);
                                     }
@@ -535,7 +669,8 @@ namespace STC_controller
                                     File_CTRL.last_order_rewrite(pair.Key, "force_stop");
                                     // STCサーバーへ通知する機能の実装予定地
                                     System.Console.WriteLine(pair.Key);
-                                    throw_force_stop_status(pair.Key);
+                                    //throw_force_stop_status(pair.Key); //停止だけだったので開始と共通化しましたのでこちらは使いません
+                                    throw_notice(pair.Key, "OFF");
 
                                 }
 
@@ -557,6 +692,30 @@ namespace STC_controller
                             case "watch_r": // 再起動状態の監視
                                 break;
                             case "force_stop": // 稼働検査でのタイムスタンプチェックで強制停止
+                                DateTime lastUpdate = System.IO.File.GetLastWriteTime(pair.Key + watch_log_file);
+                                TimeSpan timeSpan = DateTime.Now - lastUpdate;   //DateTime の差が TimeSpan として返る
+                                Console.WriteLine("最終更新日時からの秒差: " + timeSpan.TotalSeconds + "秒の差があります。");
+
+                                // 現在日時と更新日時が一定時間差以内になった場合は以降の処理を実装(取り敢えず30秒ぐらいかな)
+                                if ((int)timeSpan.TotalSeconds < 30)
+                                {
+                                    // STCサーバーへの復帰の通知とall_setting.txtの最終指示更新
+
+                                    // 通知後に該当のMT4を強制停止
+                                    Console.WriteLine("復帰");
+                                    string err = "";
+                                    if (!program_CTRL.SearchProgram(pair.Key + @"\terminal.exe", out err))
+                                    {
+                                        logger.Error(" 接続監視失敗 復帰確認対象のプログラムがOS上で見つかりませんでした パス:" + pair.Key + " 最終指示:" + pair.Value);
+                                    }
+
+                                    // 復帰確認後後、最終指示一覧に起動中である事を上書き
+                                    File_CTRL.last_order_rewrite(pair.Key, "start");
+                                    // STCサーバーへ通知する機能の実装予定地
+                                    System.Console.WriteLine(pair.Key);
+                                    throw_notice(pair.Key, "ON");
+                                }
+                                
                                 break;
                             default:
                                 // 指示ファイル上の指示がおかしい場合
@@ -611,7 +770,7 @@ namespace STC_controller
                 
                 req_obj.Ope_Number = -1;
                 req_obj.Stc_ID = stArrayData[3];
-                req_obj.Request_Time = Json_Util.iso_8601_now();
+                //req_obj.Request_Time = Json_Util.iso_8601_now();
                 req_obj.Machine_Name = MainForm.machine_name;
                 req_obj.Response_Time = Json_Util.iso_8601_now();
                 req_obj.EA_ID = stArrayData[8];
@@ -620,11 +779,11 @@ namespace STC_controller
                 req_obj.MT4_ID = stArrayData[5];
                 req_obj.Ccy = stArrayData[6];
                 req_obj.Time_Period = stArrayData[7];
-                req_obj.Ope_Code = "status";
-                req_obj.Vol_1shot = "";
-                req_obj.A_Start = "";
+                req_obj.Ope_Code = "notice";
+                //req_obj.Vol_1shot = "";
+                //req_obj.A_Start = "";
 
-                req_obj.EA_Status = "stop";
+                req_obj.EA_Status = "OFF";
 
                 OK_req_list.Add(req_obj);
                 
@@ -632,7 +791,7 @@ namespace STC_controller
                 dynamic out_put = Json_Util.reParse(OK_req_list);
 
                 // 処理結果登録
-                http_Request_CTRL.http_post(out_put.ToString(), MainForm.resultbox); //MainForm//private void rdo_stg_CheckedChanged
+                http_Request_CTRL.http_post(out_put.ToString(), MainForm.ea_alert); //MainForm//private void rdo_stg_CheckedChanged
                 
 
             }
@@ -641,6 +800,62 @@ namespace STC_controller
                 logger.Error(ex.Message);
             }
 
+        }
+
+        private static void throw_notice(string path_string, string ea_status)
+        {
+            try
+            {
+
+                // 取り敢えずここで強制停止時のJsonを生成してサーバーへ投げ込むまでの
+                // 機能実装を行ってテストしみてる！
+
+                // all_setting上のプログラムインストールパスを区切りで分割して配列に格納する
+                string[] stArrayData = path_string.Split('\\');
+
+                // データを確認する
+                /*
+                foreach (string stData in stArrayData)
+                {
+                    System.Console.WriteLine(stData);
+                }
+                System.Console.WriteLine(stArrayData[1]);
+                */
+
+                ArrayList OK_req_list = new ArrayList();
+
+
+                //定義変更時はRequest_machine_checkの項目も併せて修正しましょう！
+                dynamic req_obj = new DynamicJson(); // ルートのコンテナ
+
+                req_obj.Ope_Number = -1;
+                req_obj.Stc_ID = stArrayData[3];
+                req_obj.Machine_Name = MainForm.machine_name;
+                req_obj.Response_Time = Json_Util.iso_8601_now();
+                req_obj.EA_ID = stArrayData[8];
+                req_obj.Broker_Name = stArrayData[4];
+                req_obj.MT4_Server = stArrayData[4];
+                req_obj.MT4_ID = stArrayData[5];
+                req_obj.Ccy = stArrayData[6];
+                req_obj.Time_Period = stArrayData[7];
+                req_obj.Ope_Code = "notice";
+
+                req_obj.EA_Status = ea_status;
+
+                OK_req_list.Add(req_obj);
+
+
+                dynamic out_put = Json_Util.reParse_solo(OK_req_list);//大かっこありだとエラーになっている
+
+                // 処理結果登録
+                http_Request_CTRL.http_post(out_put.ToString(), MainForm.ea_alert); //MainForm//private void rdo_stg_CheckedChanged
+
+
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
         }
 
 
@@ -667,6 +882,7 @@ namespace STC_controller
                             bool status = false;
                             string program_path = pair.Key + @"\terminal.exe";
                             string error = "";
+                            string option_param = "/portable /skipupdate";
 
                             // 起動指示前に起動しているかの確認
                             status = program_CTRL.SearchProgram(program_path, out error);
@@ -675,7 +891,15 @@ namespace STC_controller
                             {
                                 // 起動動作を行います
                                 // program_CTRL.StartProgramはbool値返すのでfalseの時はログへ出力する
-                                status = program_CTRL.StartProgram(program_path);
+                                if (MainForm.mt4_opt)
+                                {
+                                    status = program_CTRL.StartProgram(program_path, option_param);
+                                }
+                                else
+                                {
+                                    status = program_CTRL.StartProgram(program_path);
+                                }
+                                
                                 if (!status)
                                 {
                                     logger.Error(" 起動状態再現失敗 起動する事が出来ませんでした: パス:" + pair.Key + " 最終指示:" + pair.Value);

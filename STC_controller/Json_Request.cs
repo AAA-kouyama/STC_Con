@@ -72,6 +72,12 @@ namespace STC_controller
                 case "outage":
                     dyn_check_ope_tag = Create_dictionary_uninst();
                     break;
+                case "mod_ea":
+                    dyn_check_ope_tag = Create_dictionary_mod_ea();
+                    break;
+                case "mod_brok":
+                    dyn_check_ope_tag = Create_dictionary_mod_brok();
+                    break;
                 case "watch_s":
                     dyn_check_ope_tag = Create_dictionary_watch_s();
                     break;
@@ -151,6 +157,30 @@ namespace STC_controller
             //return dic_start;
 
             //statusはOpe_Tag未使用なのでnullで応答します。
+            return null;
+        }
+
+        private static Dictionary<object, int> Create_dictionary_mod_ea()
+        {
+            //request.jsonのOpe_Tag項目名とフィールドサイズをディクショナリー化
+            //var dic_start = new Dictionary<object, int>();
+            //dic_start.Add("Ccy", 10);
+            //dic_start.Add("Time_Period", 10);
+            //return dic_start;
+
+            // mod_eaはOpe_Tagチェックしないのでnullで応答します。
+            return null;
+        }
+
+        private static Dictionary<object, int> Create_dictionary_mod_brok()
+        {
+            //request.jsonのOpe_Tag項目名とフィールドサイズをディクショナリー化
+            //var dic_start = new Dictionary<object, int>();
+            //dic_start.Add("Ccy", 10);
+            //dic_start.Add("Time_Period", 10);
+            //return dic_start;
+
+            // mod_eaはOpe_Tag未使用なのでnullで応答します。
             return null;
         }
 

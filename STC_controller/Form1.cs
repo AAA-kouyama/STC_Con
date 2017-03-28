@@ -18,6 +18,7 @@ namespace STC_controller
     public partial class MainForm : Form
     {
 
+        // private static string test_server_url = "https://stc.rool.ml/"; 
         private static string test_server_url = "https://218.222.227.232/";
         private static string real_server_url = "https://systrade-cloud.com/";
 
@@ -28,11 +29,18 @@ namespace STC_controller
 
         // post先URL(rdo_stg_CheckedChanged()にて設定)
         private static string upload = "";
-        public static string resultbox = ""; 
+        public static string resultbox = "";
+
+        // 監視アラート用post先URL(rdo_stg_CheckedChanged()にて設定)
+        //ea_alert.php
+        public static string ea_alert = "";
 
         private retry_timer Retry_Timer;
 
         public static string machine_name = "";
+
+        // MT4起動オプション引数格納用
+        public static bool mt4_opt = true; 
 
         public MainForm()
         {
@@ -85,7 +93,7 @@ namespace STC_controller
                         System.Console.WriteLine(pair.Value);
                         if (pair.Value == "true")
                         {
-                            btn_recover_Click(null,null);
+                            MT4_CTLR.recover_MT4();
                         }
                         break;
                     case "request_timer": // リクエストポーリングタイマー true…起動時実行、false…起動時実行しない
@@ -116,10 +124,23 @@ namespace STC_controller
                         if (pair.Value == "true")
                         {
                             tgl_MT4_watch.Checked = true;
+                            mt4_opt = true;
                         }
                         else
                         {
                             tgl_MT4_watch.Checked = false;
+                            mt4_opt = false;
+                        }
+                        break;
+                    case "MT4_option": // MT4起動時オプション /portable /skipupdate true…有効、false…無効
+                        System.Console.WriteLine(pair.Value);
+                        if (pair.Value == "true")
+                        {
+                            tgl_MT4_option.Checked = true;
+                        }
+                        else
+                        {
+                            tgl_MT4_option.Checked = false;
                         }
                         break;
                     default:
@@ -664,6 +685,8 @@ namespace STC_controller
                 // post先URL
                 upload = test_server_url + "SV/admin/upload.php";
                 resultbox = test_server_url + "SV/admin/resultbox.php";
+                ea_alert = test_server_url + "SV/admin/ea_alert.php";
+
             }
             else
             {
@@ -676,7 +699,161 @@ namespace STC_controller
                 // post先URL
                 upload = real_server_url + "SV/admin/upload.php";
                 resultbox = real_server_url + "SV/admin/resultbox.php";
+                ea_alert = real_server_url + "SV/admin/ea_alert.php";
             }
+        }
+
+
+        private void set_cmb_data(object sender, string folder_name)
+        {
+            string search_str = ""; // ユーザーフォルダの直下は"u****"だけ検索させてます。
+
+            if (folder_name != "")
+            {
+                folder_name = @"\" + folder_name;
+                search_str = "*";
+            }
+            else
+            {
+                search_str = "u*";
+            }
+
+            if (sender != null)
+            {
+                System.Windows.Forms.ComboBox cmb_target = (System.Windows.Forms.ComboBox)sender;
+
+                string path_string = @"C:\Users\GFIT" + folder_name;
+                IEnumerable<string> subFolders = System.IO.Directory.EnumerateDirectories(path_string, search_str, System.IO.SearchOption.TopDirectoryOnly);
+
+                // STCユーザーIDの設定前に一旦クリア
+                cmb_target.Items.Clear();
+
+                path_string = path_string + @"\";
+                //サブフォルダを列挙する
+                foreach (string subFolder in subFolders)
+                {
+                    // 列挙されたユーザーをcomboboxに設定
+                    cmb_target.Items.Add(subFolder.Replace(path_string, ""));
+                }
+            }
+
+        }
+
+        private void clear_cmb(object sender)
+        {
+            System.Windows.Forms.ComboBox cmb_target = (System.Windows.Forms.ComboBox)sender;
+            cmb_target.Items.Clear();
+            cmb_target.Text = "";
+        }
+
+        private void btn_getUser_Click(object sender, EventArgs e)
+        {
+
+            set_cmb_data(cmb_stcUser, "");
+            cmb_stcUser.Text = "";
+            clear_cmb(cmb_mt4SV);
+            clear_cmb(cmb_mt4ID);
+            clear_cmb(cmb_CCY);
+            clear_cmb(cmb_Time_Period);
+            clear_cmb(cmb_EA_ID);
+            MessageBox.Show("STCユーザー抽出完了\n\r引き続きコンボボックスで対象を選んでください", "起動中のMT4検索", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void cmb_stcUser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            set_cmb_data(cmb_mt4SV, cmb_stcUser.SelectedItem.ToString());
+            cmb_mt4SV.Text = "";
+            clear_cmb(cmb_mt4ID);
+            clear_cmb(cmb_CCY);
+            clear_cmb(cmb_Time_Period);
+            clear_cmb(cmb_EA_ID);
+        }
+
+        private void cmb_mt4SV_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            set_cmb_data(cmb_mt4ID, cmb_stcUser.SelectedItem.ToString() + @"\" + cmb_mt4SV.SelectedItem.ToString());
+            cmb_mt4ID.Text = "";
+            clear_cmb(cmb_CCY);
+            clear_cmb(cmb_Time_Period);
+            clear_cmb(cmb_EA_ID);
+        }
+
+        private void cmb_mt4ID_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            set_cmb_data(cmb_CCY, cmb_stcUser.SelectedItem.ToString() + @"\" 
+                                + cmb_mt4SV.SelectedItem.ToString() + @"\"
+                                + cmb_mt4ID.SelectedItem.ToString());
+            cmb_CCY.Text = "";
+            clear_cmb(cmb_Time_Period);
+            clear_cmb(cmb_EA_ID);
+
+        }
+
+        private void cmb_CCY_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            set_cmb_data(cmb_Time_Period, cmb_stcUser.SelectedItem.ToString() + @"\"
+                    + cmb_mt4SV.SelectedItem.ToString() + @"\"
+                    + cmb_mt4ID.SelectedItem.ToString() + @"\"
+                    + cmb_CCY.SelectedItem.ToString());
+            cmb_Time_Period.Text = "";
+            clear_cmb(cmb_EA_ID);
+        }
+
+        private void cmb_Time_Period_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            set_cmb_data(cmb_EA_ID, cmb_stcUser.SelectedItem.ToString() + @"\"
+                    + cmb_mt4SV.SelectedItem.ToString() + @"\"
+                    + cmb_mt4ID.SelectedItem.ToString() + @"\"
+                    + cmb_CCY.SelectedItem.ToString() + @"\"
+                    + cmb_Time_Period.SelectedItem.ToString());
+        }
+
+        private void btn_find_MT4_Click(object sender, EventArgs e)
+        {
+            
+            if (cmb_stcUser.SelectedIndex >= 0 &&
+                cmb_mt4SV.SelectedIndex >= 0 &&
+                cmb_mt4ID.SelectedIndex >= 0 &&
+                cmb_CCY.SelectedIndex >= 0 &&
+                cmb_Time_Period.SelectedIndex >= 0 &&
+                cmb_EA_ID.SelectedIndex >= 0)
+            {
+                string err = "";
+                string path = @"C:\Users\GFIT\" + cmb_stcUser.SelectedItem.ToString() + @"\"
+                        + cmb_mt4SV.SelectedItem.ToString() + @"\"
+                        + cmb_mt4ID.SelectedItem.ToString() + @"\"
+                        + cmb_CCY.SelectedItem.ToString() + @"\"
+                        + cmb_Time_Period.SelectedItem.ToString() + @"\"
+                        + cmb_EA_ID.SelectedItem.ToString() + @"\terminal.exe";
+
+                if (!program_CTRL.SearchProgram(path, out err))
+                {
+                    MessageBox.Show(err, "起動中のMT4検索", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("みっけ！", "起動中のMT4検索", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    program_CTRL.StartProgram(path);
+                }
+            }
+            else
+            {
+                MessageBox.Show("検索対象の入力条件を選択してください。", "起動中のMT4検索", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            File_CTRL.log_file_del();
+        }
+
+        private void tgl_MT4_option_CheckedChanged(object sender, EventArgs e)
+        {
+            tgl_MT4_option.Text = "MT4 option " + tgl_MT4_option.Checked.ToString();
+            mt4_opt = tgl_MT4_option.Checked;
         }
     }
 

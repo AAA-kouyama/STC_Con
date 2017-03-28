@@ -22,10 +22,36 @@ namespace STC_controller
         /// <param name="ProgramPath">起動対象の絶対パス</param>
         public static bool StartProgram(string ProgramPath)
         {
+            try
+            {
+                Process.Start(ProgramPath, " /skipupdate");
+                return true;
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                //対象なしの場合のエラー処理
+                logger.Error(ex.Message);
+                return false;
+            }
+            catch (System.Exception ex)
+            {
+                //捕捉出来ていないイレギュラーの場合のエラー処理
+                logger.Error(ex.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 指定プログラム開始関数(オプション指定)
+        /// </summary>
+        /// <param name="ProgramPath">起動対象の絶対パス</param>
+        /// <param name="option_param">起動時のオプション引数指定</param>
+        public static bool StartProgram(string ProgramPath, string option_param)
+        {
 
             try
             {
-                Process.Start(ProgramPath, "/skipupdate");
+                Process.Start(ProgramPath, option_param);
                 return true;
             }
             catch (System.ComponentModel.Win32Exception ex)

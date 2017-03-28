@@ -52,6 +52,46 @@ namespace STC_controller
         }
 
         /// <summary>
+        /// 単独レコードだがにArrayListで受け取っているので文字列に変換しなおしてからJsonに変換します
+        /// </summary>
+        /// <param name="target_list"></param>
+        /// <returns></returns>
+        public static dynamic reParse_solo(ArrayList target_list)
+        {
+            try
+            {
+                string user_list = null;
+
+                
+                if (target_list.Count > 0)
+                {
+                    //int cnt = 0;
+                    //user_list = "[";
+                    foreach (dynamic OK_user in (ArrayList)target_list)
+                    {
+                        user_list += OK_user.ToString();
+                        /*cnt++;
+                        if (target_list.Count != cnt)
+                        {
+                            user_list += ",";
+                        }*/
+                    }
+                    //user_list += "]";
+                }
+                
+                dynamic return_user = DynamicJson.Parse(user_list);
+
+                return return_user;
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                return null;
+            }
+
+        }
+
+        /// <summary>
         /// jsonオブジェクトの指定の項目数とプログラム上の設定項目数が一致している場合はtrue、していない場合はfalse
         /// </summary>
         /// <param name="json_obj">判定対象のjsonオブジェク</param>
@@ -212,7 +252,22 @@ namespace STC_controller
             }
 
         }
-        
+
+        public static object get_Ope_Tag_Value(dynamic json_obj, string Field_Name)
+        {
+            try
+            {
+                return json_obj.IsDefined_getOpe_Tag_Value(Field_Name);
+
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                return "";
+            }
+
+        }
+
 
         /// <summary>
         /// 日付項目について正しい内容であればtrue、間違っていればfalse
