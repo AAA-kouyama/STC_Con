@@ -46,7 +46,18 @@ namespace STC_controller
                     req_obj.Time_Period = Json_Util.get_Value(read_req, "Time_Period");
                     //req_obj.EA_Status = Json_Util.get_Value(read_req, "EA_Status").ToUpper();
                     req_obj.Ope_Code = Json_Util.get_Value(read_req, "Ope_Code");
-                    req_obj.Vol_1shot = Json_Util.get_Value(read_req, "Vol_1shot");
+
+                    // Vol_1shotを強制的にゼロにするEAであるかを判定します
+                    if (vol1_force_zero(Json_Util.get_Value(read_req, "EA_Name")))
+                    {
+                        req_obj.Vol_1shot = "0";
+                    }
+                    else
+                    {
+                        req_obj.Vol_1shot = Json_Util.get_Value(read_req, "Vol_1shot");
+                    }
+                    
+
                     req_obj.A_Start = Json_Util.get_Value(read_req, "A_Start");
                     if (read_req.Check_Status == "NG")
                     {
@@ -211,5 +222,25 @@ namespace STC_controller
             //return req_obj;
             return null;
         }
+
+        private static bool vol1_force_zero(string EA_NAME)
+        { 
+
+            if (MainForm.vol_1shot_zero.Count < 1)
+            {
+                return false;
+            }
+
+            if (EA_NAME == "" || EA_NAME == null)
+            {
+                return false;
+            }
+
+            return Convert.ToBoolean(MainForm.vol_1shot_zero[EA_NAME]);
+
+
+        }
+
+
     }
 }

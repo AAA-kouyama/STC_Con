@@ -42,12 +42,8 @@ namespace STC_controller
 
                 stc_ID = user.Stc_ID;
                 ins_path = folder;
-                if (!System.IO.Directory.Exists(folder)){
-                    System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(folder);
-                    return true;
-                }
 
-                return false;
+                return CreateFolder(folder);
 
             }
             catch (System.Exception ex)
@@ -58,6 +54,34 @@ namespace STC_controller
                 return false;
             }
             
+        }
+
+        /// <summary>
+        /// 任意のフォルダを作成します
+        /// </summary>
+        /// <param name="folder_path">作成するフォルダの絶対パス</param>
+        /// <returns></returns>
+        public static bool CreateFolder(string folder_path)
+        {
+            try
+            {
+                string folder = folder_path;
+
+                if (!System.IO.Directory.Exists(folder))
+                {
+                    System.IO.DirectoryInfo di = System.IO.Directory.CreateDirectory(folder);
+                    return true;
+                }
+
+                return false;
+
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                return false;
+            }
+
         }
 
         /// <summary>

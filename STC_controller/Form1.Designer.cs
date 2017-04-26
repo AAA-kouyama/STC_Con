@@ -34,6 +34,8 @@
             this.tmr_rquest = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tgl_MT4_option = new System.Windows.Forms.CheckBox();
+            this.label30 = new System.Windows.Forms.Label();
             this.lbl_Machine_Name = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -121,8 +123,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.cmb_stcUser = new System.Windows.Forms.ComboBox();
             this.tmr_conn_watch = new System.Windows.Forms.Timer(this.components);
-            this.label30 = new System.Windows.Forms.Label();
-            this.tgl_MT4_option = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.btn_view_param = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -190,6 +192,27 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "起動設定関連";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tgl_MT4_option
+            // 
+            this.tgl_MT4_option.Appearance = System.Windows.Forms.Appearance.Button;
+            this.tgl_MT4_option.AutoSize = true;
+            this.tgl_MT4_option.Location = new System.Drawing.Point(356, 112);
+            this.tgl_MT4_option.Name = "tgl_MT4_option";
+            this.tgl_MT4_option.Size = new System.Drawing.Size(101, 22);
+            this.tgl_MT4_option.TabIndex = 63;
+            this.tgl_MT4_option.Text = "MT4 option false";
+            this.tgl_MT4_option.UseVisualStyleBackColor = true;
+            this.tgl_MT4_option.CheckedChanged += new System.EventHandler(this.tgl_MT4_option_CheckedChanged);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(354, 72);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(75, 12);
+            this.label30.TabIndex = 62;
+            this.label30.Text = "MT4起動引数";
             // 
             // lbl_Machine_Name
             // 
@@ -511,6 +534,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btn_view_param);
+            this.tabPage3.Controls.Add(this.label31);
             this.tabPage3.Controls.Add(this.button1);
             this.tabPage3.Controls.Add(this.label29);
             this.tabPage3.Controls.Add(this.label5);
@@ -1085,26 +1110,24 @@
             this.tmr_conn_watch.Interval = 6000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
-            // label30
+            // label31
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(354, 72);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(75, 12);
-            this.label30.TabIndex = 62;
-            this.label30.Text = "MT4起動引数";
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(4, 205);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(79, 12);
+            this.label31.TabIndex = 43;
+            this.label31.Text = "view_ea_param";
             // 
-            // tgl_MT4_option
+            // btn_view_param
             // 
-            this.tgl_MT4_option.Appearance = System.Windows.Forms.Appearance.Button;
-            this.tgl_MT4_option.AutoSize = true;
-            this.tgl_MT4_option.Location = new System.Drawing.Point(356, 112);
-            this.tgl_MT4_option.Name = "tgl_MT4_option";
-            this.tgl_MT4_option.Size = new System.Drawing.Size(101, 22);
-            this.tgl_MT4_option.TabIndex = 63;
-            this.tgl_MT4_option.Text = "MT4 option false";
-            this.tgl_MT4_option.UseVisualStyleBackColor = true;
-            this.tgl_MT4_option.CheckedChanged += new System.EventHandler(this.tgl_MT4_option_CheckedChanged);
+            this.btn_view_param.Location = new System.Drawing.Point(6, 220);
+            this.btn_view_param.Name = "btn_view_param";
+            this.btn_view_param.Size = new System.Drawing.Size(75, 23);
+            this.btn_view_param.TabIndex = 44;
+            this.btn_view_param.Text = "View param";
+            this.btn_view_param.UseVisualStyleBackColor = true;
+            this.btn_view_param.Click += new System.EventHandler(this.btn_view_param_Click);
             // 
             // MainForm
             // 
@@ -1236,6 +1259,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox tgl_MT4_option;
         private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Button btn_view_param;
+        private System.Windows.Forms.Label label31;
     }
 }
 

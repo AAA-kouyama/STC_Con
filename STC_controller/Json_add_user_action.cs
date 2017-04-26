@@ -97,7 +97,35 @@ namespace STC_controller
                 else
                 {
                     // デスクトップにインストールパス格納ファイル生成
-                    File_CTRL.file_OverWrite(ins_path, ins_file_name + "\\" + stc_id + "_setting.txt");
+                    if (MainForm.mt4_opt)
+                    {
+
+                        // 動作時オプション有効ボタンがtrueの場合はフォルダ特定可能なので直接セッティングテキストを出力
+                        string files_path = File_CTRL.get_folder_path(read_user) + @"\MQL4\Files";
+                        // filesフォルダーの生成
+                        File_CTRL.file_OverWrite(ins_path, files_path + @"\setting.txt");
+
+                        // 一旦空でread_parametersファイル出力
+                        string read_full_path = files_path + @"\read_parameters.csv";
+
+                        string param = "";
+
+                        File_CTRL.file_OverWrite(param, read_full_path, false);
+
+                        //eaのパラメータファイルを出力する機能を追加
+
+                        string dummy_error = "";
+                        MT4_CTLR.output_ea_param(read_user,out dummy_error);
+
+                    }
+                    else
+                    {
+                        // 動作時オプション有効ボタンがfalseの場合は手動でセッティングテキストを設定してもらうため任意の場所にファイル出力
+                        File_CTRL.file_OverWrite(ins_path, ins_file_name + "\\" + stc_id + "_setting.txt");
+                    }
+                    
+
+
 
                     // 全ユーザーのインストールパス格納ファイルを出力する(稼働監視用)
                     File_CTRL.file_AddWrite(ins_path + ",stop", File_CTRL.get_CodeBase_path() + "\\all_setting.txt");

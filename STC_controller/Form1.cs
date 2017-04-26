@@ -26,6 +26,7 @@ namespace STC_controller
         private static string add_user_url = "";
         private static string request = "";
         private static string add_EA_url = "";
+        private static string view_param_url = "";
 
         // post先URL(rdo_stg_CheckedChanged()にて設定)
         private static string upload = "";
@@ -40,7 +41,10 @@ namespace STC_controller
         public static string machine_name = "";
 
         // MT4起動オプション引数格納用
-        public static bool mt4_opt = true; 
+        public static bool mt4_opt = true;
+
+        // response時vol_1shotを強制的にゼロにするEA名称とbool値の文字列
+        public static Dictionary<string, string> vol_1shot_zero = null;
 
         public MainForm()
         {
@@ -147,7 +151,11 @@ namespace STC_controller
                         // 設定ファイル上の指示がおかしい場合
                         break;
                 }
+
             }
+
+            // EA毎のvol1応答の強制書き換え設定の取得
+            get_vol1_setting(); 
 
         }
 
@@ -681,6 +689,8 @@ namespace STC_controller
                 add_user_url = test_server_url + "SV/admin/add_user.php";
                 request = test_server_url + "SV/admin/request.php";
                 add_EA_url = test_server_url + "SV/admin/add_ea.php";
+                view_param_url = test_server_url + "SV/admin/view_ea_param.php";
+
 
                 // post先URL
                 upload = test_server_url + "SV/admin/upload.php";
@@ -695,6 +705,7 @@ namespace STC_controller
                 add_user_url = real_server_url + "SV/admin/add_user.php";
                 request = real_server_url + "SV/admin/request.php";
                 add_EA_url = real_server_url + "SV/admin/add_ea.php";
+                view_param_url = real_server_url + "SV/admin/view_ea_param.php";
 
                 // post先URL
                 upload = real_server_url + "SV/admin/upload.php";
@@ -706,7 +717,7 @@ namespace STC_controller
 
         private void set_cmb_data(object sender, string folder_name)
         {
-            string search_str = ""; // ユーザーフォルダの直下は"u****"だけ検索させてます。
+            string search_str = ""; // ユーザーフォルダの直下は"****"だけ検索させてます。
 
             if (folder_name != "")
             {
@@ -715,7 +726,7 @@ namespace STC_controller
             }
             else
             {
-                search_str = "u*";
+                search_str = "*";
             }
 
             if (sender != null)
@@ -854,6 +865,23 @@ namespace STC_controller
         {
             tgl_MT4_option.Text = "MT4 option " + tgl_MT4_option.Checked.ToString();
             mt4_opt = tgl_MT4_option.Checked;
+        }
+
+        private void btn_view_param_Click(object sender, EventArgs e)
+        {
+            get_vol1_setting();
+            
+        }
+
+        private void get_vol1_setting()
+        {
+            bool status = false;
+            string error = "";
+
+            string result = http_Request_CTRL.http_get(view_param_url, out status);
+            System.Console.WriteLine(result);
+
+            vol_1shot_zero = Json_EA_Param_action.ea_param_motion(result, out status, out error);
         }
     }
 

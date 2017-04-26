@@ -60,6 +60,17 @@ namespace STC_controller
                     }
 
                     user_obj.Init_Status = Json_Util.get_Value(read_user, "Check_Status");
+
+                    // 4/26かずさんが追加していたので対応
+                    user_obj.Stc_Name = Json_Util.get_Value(read_user, "Stc_Name");
+
+                    // Ope_Tagでの追加タグ生成
+                    dynamic req_obj_ope_tag = Ope_Tag_Creator(user_obj, read_user);
+                    if (req_obj_ope_tag != null)
+                    {
+                        user_obj = req_obj_ope_tag;
+                    }
+
                     OK_user_list.Add(user_obj);
                 }
 
@@ -78,5 +89,44 @@ namespace STC_controller
 
             }
         }
+
+        /// <summary>
+        /// Ope_Tag用の追加タグを生成するための分岐を行います。
+        /// </summary>
+        /// <param name="req_obj">応答用のjson</param>
+        /// <param name="read_req">処理対象のjson</param>
+        /// <returns></returns>
+        private static dynamic Ope_Tag_Creator(dynamic req_obj, dynamic read_req)
+        {
+
+            dynamic return_json = null;
+
+            if (Json_Util.get_Ope_Tag_Value(read_req, "header") == "")
+            {
+                return null;
+            }
+
+            // ope_tagが存在している場合は生成して応答
+            return_json = Create_return_ope_tag(req_obj, read_req);
+
+            return return_json;
+        }
+
+
+        private static dynamic Create_return_ope_tag(dynamic req_obj, dynamic read_req)
+        {
+            // 元のJsonのライブラリを改変してOpe_Tag用の1段階ネストを追加
+            // System.Console.WriteLine(Json_Util.get_Ope_Tag_Value(read_req, "header"));
+            // System.Console.WriteLine(Json_Util.get_Ope_Tag_Value(read_req, "param"));
+
+            req_obj.Ope_Tag = new { }; // Ope_Tagのオブジェクトの追加
+            req_obj.Ope_Tag.header = Json_Util.get_Ope_Tag_Value(read_req, "header");
+            req_obj.Ope_Tag.param = Json_Util.get_Ope_Tag_Value(read_req, "param");
+
+            return req_obj;
+        }
+
+
+
     }
 }

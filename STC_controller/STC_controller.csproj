@@ -72,7 +72,9 @@
     <Compile Include="Json_Add_User.cs" />
     <Compile Include="Json_add_user_action.cs" />
     <Compile Include="Json_End_Init.cs" />
+    <Compile Include="Json_EA_Param.cs" />
     <Compile Include="Json_Request.cs" />
+    <Compile Include="Json_EA_Param_action.cs" />
     <Compile Include="Json_Resopnse.cs" />
     <Compile Include="Json_Util.cs" />
     <Compile Include="Json_request_action.cs" />

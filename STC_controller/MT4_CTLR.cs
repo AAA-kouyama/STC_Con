@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace STC_controller
 {
+
     class MT4_CTLR
     {
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -261,8 +262,18 @@ namespace STC_controller
             status = program_watch(read_req, out error);
             if (status)
             {
-                // MT4起動中のステータス設定
-                read_req.EA_Status = "ON";
+
+                // mod_eaが存在し更新されたか判定
+                if (file_updated_check(read_req))
+                {
+                    // MT4起動中のステータス設定
+                    read_req.EA_Status = "ON";
+                }
+                else
+                {
+                    // MT4起動中のステータス設定
+                    read_req.EA_Status = "mod_ea_fail";
+                }
 
                 Dictionary<string, string> dict = File_CTRL.csv_reader("all_setting.txt");
                 string file_path = File_CTRL.get_folder_path(read_req);
@@ -434,33 +445,47 @@ namespace STC_controller
             // portableオプションの確認ロジックを追加予定 mt4_optはtgl_MT4_option.Checkedの値を格納しています
             if (MainForm.mt4_opt)
             {
+                // MT4が起動しているか確認してEA_Status　ON/OFF/NGで結果を準備
+                get_status(read_req, out status, out error);
+
                 // ファイルを指定のMT4のFILEフォルダーに書き出し
                 status = output_ea_param(read_req, out error);
 
                 if (status)
                 {
-                    // MT4が起動しているか確認してEA_Status　ON/OFF/NGで結果を準備
-                    get_status(read_req, out status, out error);
 
-                    if (read_req.EA_Status == "ON")
+                    string req_error = "";
+                    // EAの起動状態の場合は停止して再起動するように変更
+                    if (read_req.EA_Status == "ON" || read_req.EA_Status == "mod_ea_fail")
                     {
-                        string req_error = "";
 
                         // 再起動する ステータスNGは見てません
                         // 停止処理
                         stop_mode(read_req, out status, out req_error);
                         error += req_error;
-
-                        // 開始処理
-                        start_mode(read_req, out status, out req_error, false);
-                        error += req_error;
-
                     }
+
+                    // 開始処理
+                    start_mode(read_req, out status, out req_error, false);
+                    error += req_error;
+
+                    // 外部のファイル読み込んでリクエストに上書きする処理を追加予定
+                    // 取り敢えず１０回ループまで許容してみる
+                    int break_cnt = 0;
+                    while(!read_ea_param(read_req, out req_error) & break_cnt < 10)
+                    {
+                        break_cnt += 1;
+                    }
+                    error += req_error;
+
                 }
                 else
                 {
                     // ファイル出力失敗時はNGステータス(UNKOWNにて)でサーバーへ通知
-                    read_req.Check_Status = "NG";
+                    read_req.Check_Status = "OK";
+
+                    // MT4起動中のステータス設定
+                    read_req.EA_Status = "mod_ea_fail";
                 }
             }
             else
@@ -472,6 +497,9 @@ namespace STC_controller
             return read_req;
         }
         
+
+
+
         /// <summary>
         /// EA用のパラメータファイルを出力します。
         /// STC_サーバーからOpe_Tagの内容をそのままファイル出力します。
@@ -479,24 +507,43 @@ namespace STC_controller
         /// <param name="read_req"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        private static bool output_ea_param(dynamic read_req, out string error)
+        public static bool output_ea_param(dynamic read_req, out string error)
         {
-            // 作成中
             error = "";
             try
             {
+                // 更新or作成前にファイルのタイムスタンプを取得予定地
+                // mod_ea用のパラメータファイルを比較してチェック
+                string folder_path = File_CTRL.get_folder_path(read_req) + @"\MQL4\Files";
+                // EAパラメータファイル出力先のパス
+                string read_full_path = folder_path + @"\read_parameters.csv";
+
+                DateTime read_parameters = System.IO.File.GetLastWriteTime(read_full_path);
+
 
                 // EAパラメータファイル出力先のMT4起動プログラムのパス
-                string out_put_full_path = File_CTRL.get_folder_path(read_req) + @"\MQL4\Files\read_parameters.csv";
+                string out_put_full_path = read_full_path;
 
                 string param = "";
                 param += Json_Util.get_Ope_Tag_Value(read_req, "header");
-                param += "\r";
+                param += "\r\n";
                 param += Json_Util.get_Ope_Tag_Value(read_req, "param");
 
                 File_CTRL.file_OverWrite(param, out_put_full_path, false);
 
-                return true;
+                // 更新後、ファイルのタイムスタンプが更新されているかチェック予定地
+
+                DateTime after_read_parameters = System.IO.File.GetLastWriteTime(read_full_path);
+                TimeSpan timeSpan = after_read_parameters - read_parameters;   //DateTime の差が TimeSpan として返る
+
+                // 更新されたか判定
+                if ((int)timeSpan.TotalSeconds > 0)
+                {
+                    return true;
+                }
+                
+                return false;
+
             }
             catch (System.Exception ex)
             {
@@ -506,6 +553,98 @@ namespace STC_controller
 
             }
 
+        }
+
+        private static bool read_ea_param(dynamic read_req, out string error)
+        {
+            // 強制停止しないと処理が先に進むので。。。
+            System.Threading.Thread.Sleep(5000);
+
+            // ＥＡが出力するＣＳＶファイル読み込み
+            error = "";
+
+            try
+            {
+                // EAから出力されるファイルのパス
+                string write_full_path = File_CTRL.get_folder_path(read_req) + @"\MQL4\Files\write_parameters.csv";
+
+                // 更新されたか判定
+                if (file_updated_check(read_req))
+                {
+                    //ファイル読み込み
+                    string param = File_CTRL.file_Read(write_full_path);
+
+                    System.Console.WriteLine(param);
+
+                    //read_reqのOpe_Tagを読み込み内容で上書き
+                    // 改行コード指定
+                    string return_code = "\r\n";
+                    // 改行コード位置特定
+                    int return_point = param.IndexOf(return_code);
+                    // 改行コード文字サイズ特定
+                    int code_size = return_code.Length;
+                    // 改行コードまでの1行目の読み込みとヘッダパラメータへの設定
+                    read_req.Ope_Tag.header = param.Substring(0, return_point);
+                    // 2行目位置を設定
+                    return_point += code_size;
+                    // 2行目改行のサイズ取得(末尾改行コード切り捨て)
+                    int param_len = param.Length - return_point - code_size;
+                    // 改行コード以降の2行目の読み込みとパラメターへの設定
+                    read_req.Ope_Tag.param = param.Substring(return_point, param_len);
+
+                    return true;
+                }
+                else
+                {
+                    //更新されていないのでfalseで応答
+                    return false;
+                }
+                
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                error = ex.Message;
+                return false;
+
+            }
+
+
+        }
+
+
+        private static bool file_updated_check(dynamic read_req)
+        {
+            // mod_ea用のパラメータファイルを比較してチェック
+            string folder_path = File_CTRL.get_folder_path(read_req) + @"\MQL4\Files";
+            // EAから出力されるファイルのパス
+            string write_full_path = folder_path + @"\write_parameters.csv";
+            // EAパラメータファイル出力先のパス
+            string read_full_path = folder_path + @"\read_parameters.csv";
+
+            // mod_eaで入出力されるファイルが無い場合(mod_ea未対応ea)の場合は強制的にtrue応答
+            if (!File_CTRL.check_file(folder_path, "write_parameters.csv"))
+            {
+                return true;
+            }
+            if (!File_CTRL.check_file(folder_path, "read_parameters.csv"))
+            {
+                return true;
+            }
+
+
+            //タイムスタンプの確認
+            DateTime write_parameters = System.IO.File.GetLastWriteTime(write_full_path);
+            DateTime read_parameters = System.IO.File.GetLastWriteTime(read_full_path);
+            TimeSpan timeSpan = write_parameters - read_parameters;   //DateTime の差が TimeSpan として返る
+
+            // 更新されたか判定
+            if ((int)timeSpan.TotalSeconds > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

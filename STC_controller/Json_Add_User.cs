@@ -39,6 +39,8 @@ namespace STC_controller
             dic.Add("Vol_1shot", 10);
             dic.Add("A_Start", 10);
 
+            dic.Add("Stc_Name", 255);
+
             return dic;
         }
 
