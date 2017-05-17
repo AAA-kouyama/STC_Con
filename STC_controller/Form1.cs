@@ -46,6 +46,9 @@ namespace STC_controller
         // response時vol_1shotを強制的にゼロにするEA名称とbool値の文字列
         public static Dictionary<string, string> vol_1shot_zero = null;
 
+        // 監視受入ポート
+        public static int port_no = 0;
+
         public MainForm()
         {
             InitializeComponent();
@@ -113,8 +116,8 @@ namespace STC_controller
                         break;
                     case "sock_connect": // 監視ソケット true…起動時受入状態、false…起動時受け入れない
                         System.Console.WriteLine(pair.Value);
-                        if (pair.Value == "true")
-                        {
+
+                        if (int.TryParse(pair.Value, out port_no)){
                             tgl_socket.Checked = true;
                         }
                         else
@@ -311,8 +314,21 @@ namespace STC_controller
         {
             if (!System.IO.Directory.Exists(txt_out_put.Text))
             {
-                MessageBox.Show("フォルダが見当たりません！デスクトップに強制設定します！");
-                txt_out_put.Text = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                MessageBox.Show("指定されたフォルダが見当たりません！デスクトップの所定フォルダに強制設定します！");
+                // パスをend_initとend_ea_add用のフォルダにします
+                string output_path = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                if (rdo_url_add_user.Checked)
+                {
+                    // ユーザー追加
+                    output_path += @"\end_init";
+                }
+                else if (rdo_url_add_EA.Checked)
+                {
+                    // EA追加
+                    output_path += @"\end_ea_add";
+                }
+
+                txt_out_put.Text = output_path;
             }
             // URL用文字列
             string request_machine = "";
@@ -365,6 +381,43 @@ namespace STC_controller
 
                     json_obj = Json_add_user_action.add_user_motion(result, out status, out error);
 
+                    //jsonを1レコード単位に分解してファイル出力する
+                    foreach (dynamic read_user in (object[])json_obj)
+                    {
+                         string created_user = read_user.Stc_ID + "_" 
+                                            + read_user.MT4_Server + "_" 
+                                            + read_user.MT4_ID + "_" 
+                                            + read_user.Ccy + "_" 
+                                            + read_user.Time_Period + "_" 
+                                            + read_user.EA_ID;
+
+                        System.Console.WriteLine(created_user);
+
+                        if (rdo_url_add_user.Checked)
+                        {
+                            // ユーザー追加
+                            out_put_file_name = "ei_" + created_user + ".json";
+                        }
+                        else if (rdo_url_add_EA.Checked)
+                        {
+                            // EA追加
+                            out_put_file_name = "ea_" + created_user + ".json";
+                        }
+
+                        if (read_user != null)
+                        {
+                            File_CTRL.file_OverWrite("[" + read_user.ToString() + "]", txt_out_put.Text + "\\" + out_put_file_name);
+
+                        }
+
+                    }
+
+                    // 登録結果としてインストールフォルダのログを出力して保管
+                    File_CTRL.get_folders();
+
+                    MessageBox.Show("結果ファイル出力完了！");
+
+                    /*
                     if (rdo_url_add_user.Checked)
                     {
                         // ユーザー追加
@@ -383,7 +436,9 @@ namespace STC_controller
 
                         // 登録結果としてインストールフォルダのログを出力して保管
                         File_CTRL.get_folders();
+                    
                     }
+                    */
                 }
                 else
                 {
@@ -493,7 +548,12 @@ namespace STC_controller
 
             if (tgl_socket.Checked)
             {
-                open_sock();
+                if (!open_sock())
+                {
+                    tgl_socket.Text = "sock fail!";
+                    MessageBox.Show("con_setting.txtのsock_connectにポート番号を設定してください");
+                }
+                    
             }
             else
             {
@@ -510,21 +570,32 @@ namespace STC_controller
 
         Thread myServerThread;
 
-        private void open_sock()
+        private bool open_sock()
         {
             // IPアドレス＆ポート番号設定
             int myPort = 56789;
-            // どこからでも接続OK
-            IPEndPoint myEndPoint = new IPEndPoint(IPAddress.Any, myPort);
 
-            // リスナー開始
-            myListener = new TcpListener(myEndPoint);
-            myListener.Start();
+            if (port_no > 0)
+            {
+                myPort = port_no;
 
-            // クライアント接続待ち開始
-            //myServerThread = new Thread(new ThreadStart(ServerThread));
-            myServerThread = new Thread(new ThreadStart(ServerThread));
-            myServerThread.Start();
+                // どこからでも接続OK
+                IPEndPoint myEndPoint = new IPEndPoint(IPAddress.Any, myPort);
+
+                // リスナー開始
+                myListener = new TcpListener(myEndPoint);
+                myListener.Start();
+
+                // クライアント接続待ち開始
+                //myServerThread = new Thread(new ThreadStart(ServerThread));
+                myServerThread = new Thread(new ThreadStart(ServerThread));
+                myServerThread.Start();
+
+                return true;
+            }
+
+            return false;
+
         }
 
 
@@ -845,7 +916,17 @@ namespace STC_controller
                 else
                 {
                     MessageBox.Show("みっけ！", "起動中のMT4検索", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    program_CTRL.StartProgram(path);
+
+                    if (mt4_opt)
+                    {
+                        program_CTRL.StartProgram(path, "/portable /skipupdate");
+                    }
+                    else
+                    {
+                        program_CTRL.StartProgram(path);
+                    }
+                    
+                    
                 }
             }
             else

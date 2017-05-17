@@ -226,17 +226,27 @@ namespace STC_controller
         private static bool vol1_force_zero(string EA_NAME)
         { 
 
-            if (MainForm.vol_1shot_zero.Count < 1)
+            try
             {
+                if (MainForm.vol_1shot_zero.Count < 1)
+                {
+                    return false;
+                }
+
+                if (EA_NAME == "" || EA_NAME == null)
+                {
+                    return false;
+                }
+
+                return Convert.ToBoolean(MainForm.vol_1shot_zero[EA_NAME]);
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message + " vol1_force_zeroチェック対象:" + EA_NAME);
                 return false;
+
             }
 
-            if (EA_NAME == "" || EA_NAME == null)
-            {
-                return false;
-            }
-
-            return Convert.ToBoolean(MainForm.vol_1shot_zero[EA_NAME]);
 
 
         }
