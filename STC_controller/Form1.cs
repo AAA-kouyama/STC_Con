@@ -21,6 +21,7 @@ namespace STC_controller
         // private static string test_server_url = "https://stc.rool.ml/"; 
         private static string test_server_url = "https://218.222.227.232/";
         private static string real_server_url = "https://systrade-cloud.com/";
+        //private static string real_server_url = "https://www.systrade-cloud.net/";
 
         // get先URL(rdo_stg_CheckedChanged()にて設定)
         private static string add_user_url = "";
@@ -78,6 +79,14 @@ namespace STC_controller
                         machine_name = pair.Value;
                         lbl_Machine_Name.Text = pair.Value;
                         break;
+
+                    case "real_server_url": // 本番接続先を設定フェイルから読み出します。
+                        if (pair.Value != "")
+                        {
+                            real_server_url = pair.Value;
+                        }
+                        break;
+
                     case "stc_server": // STC_CONの接続先サーバー test…STG環境、real…本番環境
                         System.Console.WriteLine(pair.Value);
                         switch (pair.Value)
@@ -96,6 +105,7 @@ namespace STC_controller
                         }
 
                         break;
+
                     case "recover_start": // 起動時実行状態再現 true…再現実行、false…再現はしない
                         System.Console.WriteLine(pair.Value);
                         if (pair.Value == "true")
@@ -381,6 +391,11 @@ namespace STC_controller
 
                     json_obj = Json_add_user_action.add_user_motion(result, out status, out error);
 
+                    if (json_obj == null)
+                    {
+                        MessageBox.Show("対象データが取得できませんでした！con_setting.txtの記載順でreal_server_urlが2行目ですか？");
+                        return;
+                    }
                     //jsonを1レコード単位に分解してファイル出力する
                     foreach (dynamic read_user in (object[])json_obj)
                     {
@@ -732,8 +747,9 @@ namespace STC_controller
 
         private void tgl_MT4_watch_CheckedChanged(object sender, EventArgs e)
         {
+            //
             tmr_conn_watch.Enabled = tgl_MT4_watch.Checked;
-            
+            tmr_conn_watch.Interval = Int32.Parse(txt_watch_interval.Text);
             tgl_MT4_watch.Text = "watch " + tgl_MT4_watch.Checked.ToString();
         }
 
@@ -964,6 +980,13 @@ namespace STC_controller
 
             vol_1shot_zero = Json_EA_Param_action.ea_param_motion(result, out status, out error);
         }
+
+        private void rdo_checked_changed(object sender, EventArgs e)
+        {
+            txt_out_put.Text = "";
+        }
+
+
     }
 
 }

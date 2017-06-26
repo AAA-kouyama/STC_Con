@@ -68,6 +68,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btn_http_get = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btn_view_param = new System.Windows.Forms.Button();
+            this.label31 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label29 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -123,8 +125,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.cmb_stcUser = new System.Windows.Forms.ComboBox();
             this.tmr_conn_watch = new System.Windows.Forms.Timer(this.components);
-            this.label31 = new System.Windows.Forms.Label();
-            this.btn_view_param = new System.Windows.Forms.Button();
+            this.txt_watch_interval = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -164,6 +166,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label32);
+            this.tabPage1.Controls.Add(this.txt_watch_interval);
             this.tabPage1.Controls.Add(this.tgl_MT4_option);
             this.tabPage1.Controls.Add(this.label30);
             this.tabPage1.Controls.Add(this.lbl_Machine_Name);
@@ -490,6 +494,7 @@
             this.rdo_url_add_EA.TabStop = true;
             this.rdo_url_add_EA.Text = "add_EA.json";
             this.rdo_url_add_EA.UseVisualStyleBackColor = true;
+            this.rdo_url_add_EA.CheckedChanged += new System.EventHandler(this.rdo_checked_changed);
             // 
             // rdo_url_request
             // 
@@ -500,6 +505,7 @@
             this.rdo_url_request.TabIndex = 21;
             this.rdo_url_request.Text = "Request.json";
             this.rdo_url_request.UseVisualStyleBackColor = true;
+            this.rdo_url_request.CheckedChanged += new System.EventHandler(this.rdo_checked_changed);
             // 
             // rdo_url_add_user
             // 
@@ -512,15 +518,16 @@
             this.rdo_url_add_user.TabStop = true;
             this.rdo_url_add_user.Text = "add_user.json";
             this.rdo_url_add_user.UseVisualStyleBackColor = true;
+            this.rdo_url_add_user.CheckedChanged += new System.EventHandler(this.rdo_checked_changed);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(195, 12);
+            this.label4.Size = new System.Drawing.Size(432, 12);
             this.label4.TabIndex = 42;
-            this.label4.Text = "結果ファイルはデスクトップに出力されます";
+            this.label4.Text = "ファイル出力先が未指定の場合、結果ファイルはデスクトップの規定のフォルダに出力されます";
             // 
             // btn_http_get
             // 
@@ -553,6 +560,25 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "デバッグ関連１";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btn_view_param
+            // 
+            this.btn_view_param.Location = new System.Drawing.Point(6, 220);
+            this.btn_view_param.Name = "btn_view_param";
+            this.btn_view_param.Size = new System.Drawing.Size(75, 23);
+            this.btn_view_param.TabIndex = 44;
+            this.btn_view_param.Text = "View param";
+            this.btn_view_param.UseVisualStyleBackColor = true;
+            this.btn_view_param.Click += new System.EventHandler(this.btn_view_param_Click);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(4, 205);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(79, 12);
+            this.label31.TabIndex = 43;
+            this.label31.Text = "view_ea_param";
             // 
             // button1
             // 
@@ -1107,27 +1133,25 @@
             // 
             // tmr_conn_watch
             // 
-            this.tmr_conn_watch.Interval = 6000;
+            this.tmr_conn_watch.Interval = 30000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
-            // label31
+            // txt_watch_interval
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(4, 205);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(79, 12);
-            this.label31.TabIndex = 43;
-            this.label31.Text = "view_ea_param";
+            this.txt_watch_interval.Location = new System.Drawing.Point(245, 89);
+            this.txt_watch_interval.Name = "txt_watch_interval";
+            this.txt_watch_interval.Size = new System.Drawing.Size(54, 19);
+            this.txt_watch_interval.TabIndex = 64;
+            this.txt_watch_interval.Text = "90000";
             // 
-            // btn_view_param
+            // label32
             // 
-            this.btn_view_param.Location = new System.Drawing.Point(6, 220);
-            this.btn_view_param.Name = "btn_view_param";
-            this.btn_view_param.Size = new System.Drawing.Size(75, 23);
-            this.btn_view_param.TabIndex = 44;
-            this.btn_view_param.Text = "View param";
-            this.btn_view_param.UseVisualStyleBackColor = true;
-            this.btn_view_param.Click += new System.EventHandler(this.btn_view_param_Click);
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(305, 96);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(20, 12);
+            this.label32.TabIndex = 65;
+            this.label32.Text = "ms";
             // 
             // MainForm
             // 
@@ -1261,6 +1285,8 @@
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Button btn_view_param;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox txt_watch_interval;
     }
 }
 

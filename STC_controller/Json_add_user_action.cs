@@ -22,6 +22,7 @@ namespace STC_controller
 
             Json_Add_User JAU = new Json_Add_User();
             json_obj = JAU.Json_accept(add_user_strings, out status, out error);
+            
 
             //送受信正常結果格納用パス
             string filePaht = System.IO.Directory.GetCurrentDirectory() + @"\add_user_log";
@@ -51,7 +52,7 @@ namespace STC_controller
 
                 // 応答用end_init.json生成
                 json_obj = Json_End_Init.end_init(json_obj, out status, out error);
-
+                
                 if (status)
                 {
                     //正常時、証跡の送信内容をファイル出力
@@ -70,71 +71,85 @@ namespace STC_controller
 
         private static dynamic Create_Install_folder(dynamic json_obj, out string error)
         {
+
             // エラー初期化
             error = "";
-            bool status = false;
 
-            // インストール設定ファイル
-            string ins_file_name = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-            // フォルダ生成
-            foreach (dynamic read_user in (object[])json_obj)
+            try
             {
-                /* VPSでのMT4大量稼働試験で確認出来た、１つのOSユーザーで多数のMT4を稼働させる方式で検討を進めています。
-                    現在の想定は
-                    c:\Users\GFIT\"Stc_ID"\"Broker_Name"\"MT4_ID"\"Ccy"\"Time_Period"
-                    のパスをMT4のインストールパスにしようと考えております。
-                */
-                string stc_id = "";
-                // インストールパス応答初期化
-                string ins_path = "";
-                status = File_CTRL.CreateUserFolder(read_user, out stc_id, out ins_path);
-                if (!status)
+                bool status = false;
+                
+                // インストール設定ファイル
+                string ins_file_name = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+                // フォルダ生成
+                foreach (dynamic read_user in (object[])json_obj)
                 {
-                    error = error + " Stc_ID:" + stc_id + "\n\r";
-                    read_user.Check_Status = "NG";
-                }
-                else
-                {
-                    // デスクトップにインストールパス格納ファイル生成
-                    if (MainForm.mt4_opt)
+                    /* VPSでのMT4大量稼働試験で確認出来た、１つのOSユーザーで多数のMT4を稼働させる方式で検討を進めています。
+                        現在の想定は
+                        c:\Users\GFIT\"Stc_ID"\"Broker_Name"\"MT4_ID"\"Ccy"\"Time_Period"
+                        のパスをMT4のインストールパスにしようと考えております。
+                    */
+                    string stc_id = "";
+                    // インストールパス応答初期化
+                    string ins_path = "";
+                    status = File_CTRL.CreateUserFolder(read_user, out stc_id, out ins_path);
+                    if (!status)
                     {
-
-                        // 動作時オプション有効ボタンがtrueの場合はフォルダ特定可能なので直接セッティングテキストを出力
-                        string files_path = File_CTRL.get_folder_path(read_user) + @"\MQL4\Files";
-                        // filesフォルダーの生成
-                        File_CTRL.file_OverWrite(ins_path, files_path + @"\setting.txt");
-
-                        // 一旦空でread_parametersファイル出力
-                        string read_full_path = files_path + @"\read_parameters.csv";
-
-                        string param = "";
-
-                        File_CTRL.file_OverWrite(param, read_full_path, false);
-
-                        //eaのパラメータファイルを出力する機能を追加
-
-                        string dummy_error = "";
-                        MT4_CTLR.output_ea_param(read_user,out dummy_error);
-
+                        error = error + " Stc_ID:" + stc_id + "\n\r";
+                        read_user.Check_Status = "NG";
                     }
                     else
                     {
-                        // 動作時オプション有効ボタンがfalseの場合は手動でセッティングテキストを設定してもらうため任意の場所にファイル出力
-                        File_CTRL.file_OverWrite(ins_path, ins_file_name + "\\" + stc_id + "_setting.txt");
+                        // デスクトップにインストールパス格納ファイル生成
+                        if (MainForm.mt4_opt)
+                        {
+
+                            // 動作時オプション有効ボタンがtrueの場合はフォルダ特定可能なので直接セッティングテキストを出力
+                            string files_path = File_CTRL.get_folder_path(read_user) + @"\MQL4\Files";
+                            // filesフォルダーの生成
+                            File_CTRL.file_OverWrite(ins_path, files_path + @"\setting.txt");
+
+                            // 一旦空でread_parametersファイル出力
+                            string read_full_path = files_path + @"\read_parameters.csv";
+
+                            string param = "";
+
+                            File_CTRL.file_OverWrite(param, read_full_path, false);
+
+                            //eaのパラメータファイルを出力する機能を追加
+
+                            string dummy_error = "";
+                            MT4_CTLR.output_ea_param(read_user, out dummy_error);
+
+                        }
+                        else
+                        {
+                            // 動作時オプション有効ボタンがfalseの場合は手動でセッティングテキストを設定してもらうため任意の場所にファイル出力
+                            File_CTRL.file_OverWrite(ins_path, ins_file_name + "\\" + stc_id + "_setting.txt");
+                        }
+
+                        // 全ユーザーのインストールパス格納ファイルを出力する(稼働監視用)
+                        File_CTRL.file_AddWrite(ins_path + ",Setup", File_CTRL.get_CodeBase_path() + "\\all_setting.txt");
                     }
-                    
-
-
-
-                    // 全ユーザーのインストールパス格納ファイルを出力する(稼働監視用)
-                    File_CTRL.file_AddWrite(ins_path + ",stop", File_CTRL.get_CodeBase_path() + "\\all_setting.txt");
                 }
+
+                return json_obj;
+
+
+
+            }
+            catch (System.Exception ex)
+            {
+                logger.Error(ex.Message);
+                error = "追加時フォルダ生成エラー";
+                return null;
             }
 
-            return json_obj;
-
         }
+
+
 
     }
 }

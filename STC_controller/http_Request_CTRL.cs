@@ -29,6 +29,7 @@ namespace STC_controller
         {
             try
             {
+
                 // オレオレ証明を強制的に正常証明とするクラスを呼び出します。
                 System.Net.ServicePointManager.CertificatePolicy = new TrustAllCertificatePolicy();
 
@@ -36,9 +37,14 @@ namespace STC_controller
                 System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
                 //または、
                 //System.Net.WebRequest webreq = System.Net.WebRequest.Create(url);
-                
+
+                //基本認証のAuthorizationヘッダを追加する
+                webreq.Headers["Authorization"] = "Basic " +
+                    Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(
+                            username + ":" + password));
+
                 //認証の設定
-                webreq.Credentials = new System.Net.NetworkCredential(username, password);
+                //webreq.Credentials = new System.Net.NetworkCredential(username, password);
                 
                 //サーバーからの応答を受信するためのHttpWebResponseを取得
                 System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();
@@ -98,8 +104,13 @@ namespace STC_controller
                 System.Net.HttpWebRequest req = (System.Net.HttpWebRequest)
                     System.Net.WebRequest.Create(url);
 
+                //基本認証のAuthorizationヘッダを追加する
+                req.Headers["Authorization"] = "Basic " +
+                    Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(
+                            username + ":" + password));
+
                 //認証の設定
-                req.Credentials = new System.Net.NetworkCredential(username, password);
+                //req.Credentials = new System.Net.NetworkCredential(username, password);
 
 
                 //メソッドにPOSTを指定
@@ -153,10 +164,12 @@ namespace STC_controller
                     (System.Net.HttpWebResponse)req.GetResponse();
                 //応答データを受信するためのStreamを取得
                 System.IO.Stream resStream = res.GetResponseStream();
-                //受信して表示
-                System.IO.StreamReader sr =
-                    new System.IO.StreamReader(resStream, enc);
-                Console.WriteLine(sr.ReadToEnd());
+                
+                //受信してファイル出力
+                System.IO.StreamReader sr = new System.IO.StreamReader(resStream, enc);
+                STC_controller.File_CTRL.file_OverWrite(sr.ReadToEnd(), System.IO.Directory.GetCurrentDirectory() + @"\server_response.txt");
+                
+                //Console.WriteLine(sr.ReadToEnd());
                 //閉じる
                 sr.Close();
 

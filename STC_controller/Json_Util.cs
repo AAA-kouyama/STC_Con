@@ -160,7 +160,7 @@ namespace STC_controller
                     if (item.Key != "Ope_Tag")
                     {
 
-                        check_value = item.Value;
+                        check_value = item.Value.ToString();
 
                         //Console.WriteLine(item.Key + ":" + item.Value + ":" + dic.Get(item.Key) + ":" + check_value.Length);
 
