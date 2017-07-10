@@ -34,6 +34,8 @@
             this.tmr_rquest = new System.Windows.Forms.Timer(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label32 = new System.Windows.Forms.Label();
+            this.txt_watch_interval = new System.Windows.Forms.TextBox();
             this.tgl_MT4_option = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
             this.lbl_Machine_Name = new System.Windows.Forms.Label();
@@ -56,6 +58,9 @@
             this.tgl_reuest = new System.Windows.Forms.CheckBox();
             this.tgl_add_user = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btn_create_checked_data = new System.Windows.Forms.Button();
+            this.btn_get_addData = new System.Windows.Forms.Button();
+            this.clb_target_data = new System.Windows.Forms.CheckedListBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -110,6 +115,20 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.btn_find_MT42 = new System.Windows.Forms.Button();
+            this.cmb_EA_ID2 = new System.Windows.Forms.ComboBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.cmb_Time_Period2 = new System.Windows.Forms.ComboBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.cmb_CCY2 = new System.Windows.Forms.ComboBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.cmb_mt4ID2 = new System.Windows.Forms.ComboBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.cmb_mt4SV2 = new System.Windows.Forms.ComboBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.cmb_stcUser2 = new System.Windows.Forms.ComboBox();
+            this.btn_getUser_from_text = new System.Windows.Forms.Button();
             this.btn_find_MT4 = new System.Windows.Forms.Button();
             this.cmb_EA_ID = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -124,9 +143,10 @@
             this.btn_getUser = new System.Windows.Forms.Button();
             this.label23 = new System.Windows.Forms.Label();
             this.cmb_stcUser = new System.Windows.Forms.ComboBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.txt_all_setting = new System.Windows.Forms.TextBox();
+            this.btn_read_all_setting = new System.Windows.Forms.Button();
             this.tmr_conn_watch = new System.Windows.Forms.Timer(this.components);
-            this.txt_watch_interval = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -138,6 +158,7 @@
             this.groupBox1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tmr_add_user
@@ -158,10 +179,11 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(503, 295);
+            this.tabControl1.Size = new System.Drawing.Size(565, 295);
             this.tabControl1.TabIndex = 53;
             // 
             // tabPage1
@@ -192,10 +214,27 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(495, 269);
+            this.tabPage1.Size = new System.Drawing.Size(557, 269);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "起動設定関連";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(305, 96);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(20, 12);
+            this.label32.TabIndex = 65;
+            this.label32.Text = "ms";
+            // 
+            // txt_watch_interval
+            // 
+            this.txt_watch_interval.Location = new System.Drawing.Point(245, 89);
+            this.txt_watch_interval.Name = "txt_watch_interval";
+            this.txt_watch_interval.Size = new System.Drawing.Size(54, 19);
+            this.txt_watch_interval.TabIndex = 64;
+            this.txt_watch_interval.Text = "90000";
             // 
             // tgl_MT4_option
             // 
@@ -415,6 +454,9 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btn_create_checked_data);
+            this.tabPage2.Controls.Add(this.btn_get_addData);
+            this.tabPage2.Controls.Add(this.clb_target_data);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label6);
@@ -426,15 +468,45 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(495, 269);
+            this.tabPage2.Size = new System.Drawing.Size(557, 269);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "ユーザー追加関連";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btn_create_checked_data
+            // 
+            this.btn_create_checked_data.Location = new System.Drawing.Point(434, 240);
+            this.btn_create_checked_data.Name = "btn_create_checked_data";
+            this.btn_create_checked_data.Size = new System.Drawing.Size(117, 23);
+            this.btn_create_checked_data.TabIndex = 51;
+            this.btn_create_checked_data.Text = "選択データで実行";
+            this.btn_create_checked_data.UseVisualStyleBackColor = true;
+            this.btn_create_checked_data.Click += new System.EventHandler(this.btn_create_checked_data_Click);
+            // 
+            // btn_get_addData
+            // 
+            this.btn_get_addData.Location = new System.Drawing.Point(9, 124);
+            this.btn_get_addData.Name = "btn_get_addData";
+            this.btn_get_addData.Size = new System.Drawing.Size(98, 23);
+            this.btn_get_addData.TabIndex = 50;
+            this.btn_get_addData.Text = "登録対象取得";
+            this.btn_get_addData.UseVisualStyleBackColor = true;
+            this.btn_get_addData.Click += new System.EventHandler(this.btn_get_addData_Click);
+            // 
+            // clb_target_data
+            // 
+            this.clb_target_data.CheckOnClick = true;
+            this.clb_target_data.FormattingEnabled = true;
+            this.clb_target_data.HorizontalScrollbar = true;
+            this.clb_target_data.Location = new System.Drawing.Point(5, 151);
+            this.clb_target_data.Name = "clb_target_data";
+            this.clb_target_data.Size = new System.Drawing.Size(546, 88);
+            this.clb_target_data.TabIndex = 49;
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 57);
+            this.label14.Location = new System.Drawing.Point(3, 56);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(256, 12);
             this.label14.TabIndex = 48;
@@ -443,7 +515,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 110);
+            this.label7.Location = new System.Drawing.Point(10, 96);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(75, 12);
             this.label7.TabIndex = 47;
@@ -452,7 +524,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 88);
+            this.label6.Location = new System.Drawing.Point(10, 74);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 12);
             this.label6.TabIndex = 46;
@@ -460,14 +532,14 @@
             // 
             // txt_out_put
             // 
-            this.txt_out_put.Location = new System.Drawing.Point(110, 107);
+            this.txt_out_put.Location = new System.Drawing.Point(110, 93);
             this.txt_out_put.Name = "txt_out_put";
             this.txt_out_put.Size = new System.Drawing.Size(243, 19);
             this.txt_out_put.TabIndex = 45;
             // 
             // txt_get_url
             // 
-            this.txt_get_url.Location = new System.Drawing.Point(110, 85);
+            this.txt_get_url.Location = new System.Drawing.Point(110, 71);
             this.txt_get_url.Name = "txt_get_url";
             this.txt_get_url.Size = new System.Drawing.Size(243, 19);
             this.txt_get_url.TabIndex = 44;
@@ -531,7 +603,7 @@
             // 
             // btn_http_get
             // 
-            this.btn_http_get.Location = new System.Drawing.Point(357, 105);
+            this.btn_http_get.Location = new System.Drawing.Point(357, 91);
             this.btn_http_get.Name = "btn_http_get";
             this.btn_http_get.Size = new System.Drawing.Size(75, 23);
             this.btn_http_get.TabIndex = 41;
@@ -556,7 +628,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(495, 269);
+            this.tabPage3.Size = new System.Drawing.Size(557, 269);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "デバッグ関連１";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -751,7 +823,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(495, 269);
+            this.tabPage4.Size = new System.Drawing.Size(557, 269);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "デバッグ関連２";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -927,7 +999,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(495, 269);
+            this.tabPage5.Size = new System.Drawing.Size(557, 269);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "復旧関連";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -980,6 +1052,20 @@
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.btn_find_MT42);
+            this.tabPage6.Controls.Add(this.cmb_EA_ID2);
+            this.tabPage6.Controls.Add(this.label38);
+            this.tabPage6.Controls.Add(this.cmb_Time_Period2);
+            this.tabPage6.Controls.Add(this.label37);
+            this.tabPage6.Controls.Add(this.cmb_CCY2);
+            this.tabPage6.Controls.Add(this.label36);
+            this.tabPage6.Controls.Add(this.cmb_mt4ID2);
+            this.tabPage6.Controls.Add(this.label35);
+            this.tabPage6.Controls.Add(this.cmb_mt4SV2);
+            this.tabPage6.Controls.Add(this.label34);
+            this.tabPage6.Controls.Add(this.label33);
+            this.tabPage6.Controls.Add(this.cmb_stcUser2);
+            this.tabPage6.Controls.Add(this.btn_getUser_from_text);
             this.tabPage6.Controls.Add(this.btn_find_MT4);
             this.tabPage6.Controls.Add(this.cmb_EA_ID);
             this.tabPage6.Controls.Add(this.label28);
@@ -997,25 +1083,154 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(495, 269);
+            this.tabPage6.Size = new System.Drawing.Size(557, 269);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "対象MT4検索";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // btn_find_MT42
+            // 
+            this.btn_find_MT42.Location = new System.Drawing.Point(355, 222);
+            this.btn_find_MT42.Name = "btn_find_MT42";
+            this.btn_find_MT42.Size = new System.Drawing.Size(134, 23);
+            this.btn_find_MT42.TabIndex = 27;
+            this.btn_find_MT42.Text = "all_settingから検索実行";
+            this.btn_find_MT42.UseVisualStyleBackColor = true;
+            this.btn_find_MT42.Click += new System.EventHandler(this.btn_find_MT42_Click);
+            // 
+            // cmb_EA_ID2
+            // 
+            this.cmb_EA_ID2.FormattingEnabled = true;
+            this.cmb_EA_ID2.Location = new System.Drawing.Point(109, 225);
+            this.cmb_EA_ID2.Name = "cmb_EA_ID2";
+            this.cmb_EA_ID2.Size = new System.Drawing.Size(72, 20);
+            this.cmb_EA_ID2.TabIndex = 26;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(107, 210);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(35, 12);
+            this.label38.TabIndex = 25;
+            this.label38.Text = "EA_ID";
+            // 
+            // cmb_Time_Period2
+            // 
+            this.cmb_Time_Period2.FormattingEnabled = true;
+            this.cmb_Time_Period2.Location = new System.Drawing.Point(6, 225);
+            this.cmb_Time_Period2.Name = "cmb_Time_Period2";
+            this.cmb_Time_Period2.Size = new System.Drawing.Size(97, 20);
+            this.cmb_Time_Period2.TabIndex = 24;
+            this.cmb_Time_Period2.SelectedIndexChanged += new System.EventHandler(this.cmb_Time_Period2_SelectedIndexChanged);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(6, 210);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(66, 12);
+            this.label37.TabIndex = 23;
+            this.label37.Text = "Time_Period";
+            // 
+            // cmb_CCY2
+            // 
+            this.cmb_CCY2.FormattingEnabled = true;
+            this.cmb_CCY2.Location = new System.Drawing.Point(389, 183);
+            this.cmb_CCY2.Name = "cmb_CCY2";
+            this.cmb_CCY2.Size = new System.Drawing.Size(100, 20);
+            this.cmb_CCY2.TabIndex = 22;
+            this.cmb_CCY2.SelectedIndexChanged += new System.EventHandler(this.cmb_CCY2_SelectedIndexChanged);
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(387, 168);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(28, 12);
+            this.label36.TabIndex = 21;
+            this.label36.Text = "CCY";
+            // 
+            // cmb_mt4ID2
+            // 
+            this.cmb_mt4ID2.FormattingEnabled = true;
+            this.cmb_mt4ID2.Location = new System.Drawing.Point(263, 183);
+            this.cmb_mt4ID2.Name = "cmb_mt4ID2";
+            this.cmb_mt4ID2.Size = new System.Drawing.Size(120, 20);
+            this.cmb_mt4ID2.TabIndex = 20;
+            this.cmb_mt4ID2.SelectedIndexChanged += new System.EventHandler(this.cmb_mt4ID2_SelectedIndexChanged);
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(261, 168);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(48, 12);
+            this.label35.TabIndex = 19;
+            this.label35.Text = "MT4のID";
+            // 
+            // cmb_mt4SV2
+            // 
+            this.cmb_mt4SV2.FormattingEnabled = true;
+            this.cmb_mt4SV2.Location = new System.Drawing.Point(109, 183);
+            this.cmb_mt4SV2.Name = "cmb_mt4SV2";
+            this.cmb_mt4SV2.Size = new System.Drawing.Size(148, 20);
+            this.cmb_mt4SV2.TabIndex = 18;
+            this.cmb_mt4SV2.SelectedIndexChanged += new System.EventHandler(this.cmb_mt4SV2_SelectedIndexChanged);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(107, 168);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(103, 12);
+            this.label34.TabIndex = 17;
+            this.label34.Text = "接続先MT4サーバー";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(4, 168);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(78, 12);
+            this.label33.TabIndex = 16;
+            this.label33.Text = "STCユーザーID";
+            // 
+            // cmb_stcUser2
+            // 
+            this.cmb_stcUser2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cmb_stcUser2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmb_stcUser2.FormattingEnabled = true;
+            this.cmb_stcUser2.Location = new System.Drawing.Point(6, 183);
+            this.cmb_stcUser2.Name = "cmb_stcUser2";
+            this.cmb_stcUser2.Size = new System.Drawing.Size(97, 20);
+            this.cmb_stcUser2.TabIndex = 15;
+            this.cmb_stcUser2.SelectedIndexChanged += new System.EventHandler(this.cmb_stcUser2_SelectedIndexChanged);
+            // 
+            // btn_getUser_from_text
+            // 
+            this.btn_getUser_from_text.Location = new System.Drawing.Point(6, 135);
+            this.btn_getUser_from_text.Name = "btn_getUser_from_text";
+            this.btn_getUser_from_text.Size = new System.Drawing.Size(185, 23);
+            this.btn_getUser_from_text.TabIndex = 14;
+            this.btn_getUser_from_text.Text = "all_settingからSTCユーザーＩＤ抽出";
+            this.btn_getUser_from_text.UseVisualStyleBackColor = true;
+            this.btn_getUser_from_text.Click += new System.EventHandler(this.btn_getUser_from_text_Click);
+            // 
             // btn_find_MT4
             // 
-            this.btn_find_MT4.Location = new System.Drawing.Point(210, 167);
+            this.btn_find_MT4.Location = new System.Drawing.Point(367, 91);
             this.btn_find_MT4.Name = "btn_find_MT4";
-            this.btn_find_MT4.Size = new System.Drawing.Size(75, 23);
+            this.btn_find_MT4.Size = new System.Drawing.Size(122, 23);
             this.btn_find_MT4.TabIndex = 13;
-            this.btn_find_MT4.Text = "検索実行";
+            this.btn_find_MT4.Text = "フォルダから検索実行";
             this.btn_find_MT4.UseVisualStyleBackColor = true;
             this.btn_find_MT4.Click += new System.EventHandler(this.btn_find_MT4_Click);
             // 
             // cmb_EA_ID
             // 
             this.cmb_EA_ID.FormattingEnabled = true;
-            this.cmb_EA_ID.Location = new System.Drawing.Point(109, 103);
+            this.cmb_EA_ID.Location = new System.Drawing.Point(109, 94);
             this.cmb_EA_ID.Name = "cmb_EA_ID";
             this.cmb_EA_ID.Size = new System.Drawing.Size(72, 20);
             this.cmb_EA_ID.TabIndex = 12;
@@ -1023,7 +1238,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(107, 88);
+            this.label28.Location = new System.Drawing.Point(107, 79);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(35, 12);
             this.label28.TabIndex = 11;
@@ -1032,7 +1247,7 @@
             // cmb_Time_Period
             // 
             this.cmb_Time_Period.FormattingEnabled = true;
-            this.cmb_Time_Period.Location = new System.Drawing.Point(6, 103);
+            this.cmb_Time_Period.Location = new System.Drawing.Point(6, 94);
             this.cmb_Time_Period.Name = "cmb_Time_Period";
             this.cmb_Time_Period.Size = new System.Drawing.Size(97, 20);
             this.cmb_Time_Period.TabIndex = 10;
@@ -1041,7 +1256,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 88);
+            this.label27.Location = new System.Drawing.Point(6, 79);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(66, 12);
             this.label27.TabIndex = 9;
@@ -1050,7 +1265,7 @@
             // cmb_CCY
             // 
             this.cmb_CCY.FormattingEnabled = true;
-            this.cmb_CCY.Location = new System.Drawing.Point(389, 48);
+            this.cmb_CCY.Location = new System.Drawing.Point(389, 54);
             this.cmb_CCY.Name = "cmb_CCY";
             this.cmb_CCY.Size = new System.Drawing.Size(100, 20);
             this.cmb_CCY.TabIndex = 8;
@@ -1059,7 +1274,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(387, 33);
+            this.label26.Location = new System.Drawing.Point(387, 39);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(28, 12);
             this.label26.TabIndex = 7;
@@ -1068,7 +1283,7 @@
             // cmb_mt4ID
             // 
             this.cmb_mt4ID.FormattingEnabled = true;
-            this.cmb_mt4ID.Location = new System.Drawing.Point(263, 48);
+            this.cmb_mt4ID.Location = new System.Drawing.Point(263, 54);
             this.cmb_mt4ID.Name = "cmb_mt4ID";
             this.cmb_mt4ID.Size = new System.Drawing.Size(120, 20);
             this.cmb_mt4ID.TabIndex = 6;
@@ -1077,7 +1292,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(261, 33);
+            this.label25.Location = new System.Drawing.Point(261, 39);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(48, 12);
             this.label25.TabIndex = 5;
@@ -1086,7 +1301,7 @@
             // cmb_mt4SV
             // 
             this.cmb_mt4SV.FormattingEnabled = true;
-            this.cmb_mt4SV.Location = new System.Drawing.Point(109, 48);
+            this.cmb_mt4SV.Location = new System.Drawing.Point(109, 54);
             this.cmb_mt4SV.Name = "cmb_mt4SV";
             this.cmb_mt4SV.Size = new System.Drawing.Size(148, 20);
             this.cmb_mt4SV.TabIndex = 4;
@@ -1095,7 +1310,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(107, 33);
+            this.label24.Location = new System.Drawing.Point(107, 39);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(103, 12);
             this.label24.TabIndex = 3;
@@ -1103,18 +1318,18 @@
             // 
             // btn_getUser
             // 
-            this.btn_getUser.Location = new System.Drawing.Point(6, 6);
+            this.btn_getUser.Location = new System.Drawing.Point(6, 11);
             this.btn_getUser.Name = "btn_getUser";
-            this.btn_getUser.Size = new System.Drawing.Size(111, 23);
+            this.btn_getUser.Size = new System.Drawing.Size(185, 23);
             this.btn_getUser.TabIndex = 2;
-            this.btn_getUser.Text = "STCユーザーID抽出";
+            this.btn_getUser.Text = "フォルダからSTCユーザーID抽出";
             this.btn_getUser.UseVisualStyleBackColor = true;
             this.btn_getUser.Click += new System.EventHandler(this.btn_getUser_Click);
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(4, 33);
+            this.label23.Location = new System.Drawing.Point(4, 39);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(78, 12);
             this.label23.TabIndex = 1;
@@ -1125,40 +1340,54 @@
             this.cmb_stcUser.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmb_stcUser.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmb_stcUser.FormattingEnabled = true;
-            this.cmb_stcUser.Location = new System.Drawing.Point(6, 48);
+            this.cmb_stcUser.Location = new System.Drawing.Point(6, 54);
             this.cmb_stcUser.Name = "cmb_stcUser";
             this.cmb_stcUser.Size = new System.Drawing.Size(97, 20);
             this.cmb_stcUser.TabIndex = 0;
             this.cmb_stcUser.SelectedIndexChanged += new System.EventHandler(this.cmb_stcUser_SelectedIndexChanged);
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.txt_all_setting);
+            this.tabPage7.Controls.Add(this.btn_read_all_setting);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(557, 269);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "all_setting";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // txt_all_setting
+            // 
+            this.txt_all_setting.Location = new System.Drawing.Point(6, 35);
+            this.txt_all_setting.Multiline = true;
+            this.txt_all_setting.Name = "txt_all_setting";
+            this.txt_all_setting.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txt_all_setting.Size = new System.Drawing.Size(545, 228);
+            this.txt_all_setting.TabIndex = 51;
+            // 
+            // btn_read_all_setting
+            // 
+            this.btn_read_all_setting.Location = new System.Drawing.Point(6, 6);
+            this.btn_read_all_setting.Name = "btn_read_all_setting";
+            this.btn_read_all_setting.Size = new System.Drawing.Size(108, 23);
+            this.btn_read_all_setting.TabIndex = 50;
+            this.btn_read_all_setting.Text = "all_setting Read";
+            this.btn_read_all_setting.UseVisualStyleBackColor = true;
+            this.btn_read_all_setting.Click += new System.EventHandler(this.btn_read_all_setting_Click);
             // 
             // tmr_conn_watch
             // 
             this.tmr_conn_watch.Interval = 30000;
             this.tmr_conn_watch.Tick += new System.EventHandler(this.tmr_conn_watch_Tick);
             // 
-            // txt_watch_interval
-            // 
-            this.txt_watch_interval.Location = new System.Drawing.Point(245, 89);
-            this.txt_watch_interval.Name = "txt_watch_interval";
-            this.txt_watch_interval.Size = new System.Drawing.Size(54, 19);
-            this.txt_watch_interval.TabIndex = 64;
-            this.txt_watch_interval.Text = "90000";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(305, 96);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(20, 12);
-            this.label32.TabIndex = 65;
-            this.label32.Text = "ms";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(528, 315);
+            this.ClientSize = new System.Drawing.Size(589, 315);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -1185,6 +1414,8 @@
             this.tabPage5.PerformLayout();
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1287,6 +1518,26 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox txt_watch_interval;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.TextBox txt_all_setting;
+        private System.Windows.Forms.Button btn_read_all_setting;
+        private System.Windows.Forms.Button btn_getUser_from_text;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.ComboBox cmb_stcUser2;
+        private System.Windows.Forms.ComboBox cmb_EA_ID2;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.ComboBox cmb_Time_Period2;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ComboBox cmb_CCY2;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.ComboBox cmb_mt4ID2;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.ComboBox cmb_mt4SV2;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Button btn_find_MT42;
+        private System.Windows.Forms.CheckedListBox clb_target_data;
+        private System.Windows.Forms.Button btn_get_addData;
+        private System.Windows.Forms.Button btn_create_checked_data;
     }
 }
 

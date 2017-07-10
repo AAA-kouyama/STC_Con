@@ -82,6 +82,7 @@ namespace STC_controller
 
         public static async Task<string> http_post(string post_word, string target)
         {
+            string stc_con_sv_name = MainForm.machine_name;
 
             string result = "";
             try
@@ -112,6 +113,9 @@ namespace STC_controller
                 //認証の設定
                 //req.Credentials = new System.Net.NetworkCredential(username, password);
 
+                // postがどのSTC_CONから行われたか判断するための材料としてUserAgenにcon_settingから読み出されている
+                // machine_name(稼働するSTC_CONの一意識別名称)をUserAgentに設定する
+                req.UserAgent = stc_con_sv_name;
 
                 //メソッドにPOSTを指定
                 req.Method = "POST";
