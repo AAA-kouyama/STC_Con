@@ -54,6 +54,10 @@ Json_Add_User.cs…Json_acceptor_baseにadd_user用の処理を実装したク�
 
 Json_add_user_action.cs…add_userを受信した際に各種呼出しを行うビジネスロジックを実装したクラス
 
+Json_EA_Param.cs…Json_acceptor_baseにEAパラメータ更新用の処理を実装したクラス
+
+Json_EA_Para_actionm.cs…EA更新を受信した際に各種呼出しを行うビジネスロジックを実装したクラス
+
 Json_End_Init.cs…end_ini用の応答json生成処理をするクラス
 
 Json_Request.cs…Json_acceptor_baseにrequest用の処理を実装したクラス
